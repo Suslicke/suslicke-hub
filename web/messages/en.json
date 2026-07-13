@@ -16,19 +16,14 @@
       "cases": {
         "title": "What I've already built",
         "health": {
-          "title": "AI teleradiology",
+          "title": "xaid.ai: AI teleradiology",
           "result": "10+ clinics · 6 languages",
-          "body": "A platform where radiologists report studies remotely: DICOM/PACS, study queues, an AI assistant. Running in 10+ clinics in 6 languages, since 2024 and still going."
+          "body": "An international platform where radiologists report studies remotely: DICOM/PACS, study queues, a powerful admin panel. AI produces ready-to-sign CT reports that a radiologist then verifies. Running in 10+ clinics in 6 languages, since 2024 and still going."
         },
         "admp": {
           "title": "ADMP PRO: ads on WB and Ozon",
           "result": "weeks → minutes",
           "body": "A Telegram bot for managing ads on Wildberries and Ozon. Finding ad options that actually work used to take sellers weeks; now it takes minutes. I led the project as team lead."
-        },
-        "xaid": {
-          "title": "xaid.ai",
-          "result": "international product",
-          "body": "AI HealthTech: the service automatically produces ready-to-sign CT reports that a radiologist then verifies. An international product with a powerful admin panel."
         },
         "loyrush": {
           "title": "LoyRush",
@@ -48,12 +43,12 @@
         "scioffice": {
           "title": "SciOffice",
           "result": "no-code platform",
-          "body": "A no-code/low-code builder for business systems: a company, a sales department, an app marketplace."
+          "body": "A no-code platform for educational institutions: building reports and documents without programming. Templates, data and finished documents in one system."
         },
         "kgpk": {
           "title": "Attendance and timetable for a college",
-          "result": "team of 3+1",
-          "body": "An attendance and timetable system for KGPK college. I led a team of 3+1 and took the project all the way to a system people use every day."
+          "result": "team of 4",
+          "body": "An attendance and timetable system for KGPK college. I led a team of three developers and a designer and took the project all the way to a system people use every day."
         },
         "nda": {
           "title": "Projects under NDA",
@@ -118,7 +113,7 @@
         },
         "kgpk": {
           "title": "KGPK: attendance and timetable",
-          "body": "Team of 3+1. A classic record-keeping system whose only job is to just work, every single day."
+          "body": "A team of three developers and a designer. A classic record-keeping system whose only job is to just work, every single day."
         },
         "freelance": {
           "title": "Freelance",

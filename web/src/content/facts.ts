@@ -102,9 +102,8 @@ export const PROJECTS: readonly ProjectFact[] = [
  * summary NDA card goes last. Copy lives in `personas.biz.cases.<slug>`.
  */
 export const BIZ_CASE_SLUGS = [
-  "health",
+  "health", // merged card: teleradiology platform == xaid.ai (same project)
   "admp",
-  "xaid",
   "loyrush",
   "exchangeBridge",
   "animeenigma",
