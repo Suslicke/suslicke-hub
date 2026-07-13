@@ -4,6 +4,14 @@
 name: suslicke
 
 services:
+  web:
+    build: ./web
+    # No env_file: the only runtime-relevant vars (NEXT_PUBLIC_*) are
+    # build-time inlined and not set yet (PostHog comes later).
+    ports:
+      - "127.0.0.1:18000:3000"
+    restart: always
+
   postgres:
     image: postgres:16-alpine
     env_file: .env

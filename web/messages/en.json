@@ -1,0 +1,256 @@
+{
+  "hero": {
+    "title": "Andrei Pustovoi",
+    "tagline": "Full Stack developer — Python, JS, AI. Team lead. Almaty.",
+    "whoAreYou": "Who are you?",
+    "scrollHint": "scroll down"
+  },
+  "personas": {
+    "biz": {
+      "chip": "Business",
+      "metaTitle": "Andrei Pustovoi — development for business",
+      "metaDescription": "AI teleradiology for 10+ clinics in 6 languages, ADMP PRO for Wildberries/Ozon — ad option search cut from weeks to minutes. Founder of the suslicketeam studio. Almaty.",
+      "heading": "I turn business problems into working products",
+      "intro": "For 5+ years I've been writing code that earns money instead of just sitting pretty in a repository. Below are real projects and what they did for the business. And if the job is bigger than one person — I have a studio.",
+      "cases": {
+        "title": "What I've already built",
+        "health": {
+          "title": "AI teleradiology",
+          "result": "10+ clinics · 6 languages",
+          "body": "A platform where radiologists report studies remotely: DICOM/PACS, study queues, an AI assistant. Running in 10+ clinics in 6 languages — since 2024 and still going."
+        },
+        "admp": {
+          "title": "ADMP PRO — ads on WB and Ozon",
+          "result": "weeks → minutes",
+          "body": "A Telegram bot for managing ads on Wildberries and Ozon. Finding ad options that actually work used to take sellers weeks — now it takes minutes. I led the project as team lead."
+        },
+        "kgpk": {
+          "title": "Attendance and timetable for a college",
+          "result": "team of 3+1",
+          "body": "An attendance and timetable system for KGPK college. I led a team of 3+1 and took the project all the way to a system people use every day."
+        }
+      },
+      "approach": {
+        "title": "How I work",
+        "listen": {
+          "title": "Numbers first",
+          "body": "Before writing any code, I figure out exactly where the business is losing time or money."
+        },
+        "build": {
+          "title": "Fast prototype",
+          "body": "I build a working version and we align on the live thing — no mockups, no long slide decks."
+        },
+        "grow": {
+          "title": "Grow what works",
+          "body": "I keep and grow what actually delivers. The rest we drop without regrets."
+        }
+      },
+      "studio": {
+        "title": "Need a team, not one person?",
+        "body": "I founded the suslicketeam studio — web, mobile apps and AI solutions, based in Almaty. Fixed price and timeline before we start; the code is yours on completion.",
+        "cta": "Visit suslicketeam.com"
+      },
+      "outro": {
+        "title": "Tell me about your problem",
+        "body": "Describe it in your own words — I'll ask questions and tell you honestly what I can help with and what isn't worth doing."
+      }
+    },
+    "dev": {
+      "chip": "Developer",
+      "metaTitle": "Andrei Pustovoi — Full Stack Python/JS/AI",
+      "metaDescription": "Django, FastAPI, Celery, React, Next.js, Vue, PostgreSQL, Kafka, Docker, AWS. DICOM/PACS in production, team lead. Plus an honest breakdown of how this site works.",
+      "heading": "Stack, experience and zero marketing",
+      "intro": "Full Stack with a lean towards Python backends and AI. 5+ years in production: from teleradiology DICOM streams to Telegram bots that run marketplace ads. Below: the stack, the experience, and a breakdown of the very site you're reading.",
+      "stack": {
+        "title": "Stack by layer",
+        "groups": {
+          "backend": "Backend",
+          "frontend": "Frontend",
+          "data": "Data & messaging",
+          "infra": "Infrastructure"
+        }
+      },
+      "experience": {
+        "title": "Where this stack got battle-tested",
+        "health": {
+          "title": "HealthTech: AI teleradiology",
+          "body": "Ingesting and routing DICOM from clinic PACS, study queues, an AI assistant. 10+ clinics, UI in 6 languages. Since 2024 — still my main production system."
+        },
+        "admp": {
+          "title": "ADMP PRO — WB/Ozon ads from Telegram",
+          "body": "Team lead. A bot that crunches through marketplace ad options in minutes instead of weeks of manual searching."
+        },
+        "scioffice": {
+          "title": "SciOffice",
+          "body": "Product development in a team. Details are better told in person."
+        },
+        "kgpk": {
+          "title": "KGPK — attendance and timetable",
+          "body": "Team of 3+1. A classic record-keeping system whose only job is to just work, every single day."
+        },
+        "freelance": {
+          "title": "Freelance",
+          "body": "My entry into commercial development: lots of small projects, fast feedback, and the habit of shipping things to done."
+        }
+      },
+      "site": {
+        "title": "How this site works",
+        "intro": "This site is its own case study. No magic — just decisions you can poke at:",
+        "items": {
+          "frontend": "Next.js 15 (App Router) + React Three Fiber: the voxel QR in the hero is a real, scannable matrix assembled from particles in a single InstancedMesh.",
+          "hub": "The backend is suslicke-hub: FastAPI + an aiogram bot on my own VPS. The shirt QR points at /qr, and I change campaigns and config straight from Telegram.",
+          "fallback": "An nginx fallback: if the hub goes down, nginx answers with the redirect itself — the shirt QR can't die as long as nginx is alive.",
+          "counter": "The visit counter is my own Postgres table, no cookies: a daily hash instead of tracking. PostHog runs only with consent."
+        },
+        "github": "Source code and the rest of my projects are on GitHub."
+      },
+      "outro": {
+        "title": "Want to talk code?",
+        "body": "Message me on Telegram — architecture, the voxels in the hero, or your project."
+      }
+    },
+    "hr": {
+      "chip": "HR / recruiter",
+      "metaTitle": "Andrei Pustovoi — Full Stack developer resume",
+      "metaDescription": "5+ years of experience, team lead of 3–4 people. HealthTech (DICOM/PACS, 10+ clinics), ADMP PRO, SciOffice, KGPK. Python, TypeScript, AI. Almaty. LinkedIn and CV as PDF.",
+      "heading": "A resume with no fluff",
+      "intro": "Full Stack developer and team lead: Python (Django, FastAPI, Celery), TypeScript (React, Next.js, Vue), PostgreSQL, Kafka, Docker, AWS. 5+ years of commercial experience, led teams of 3–4 people. Based in Almaty.",
+      "facts": {
+        "title": "At a glance",
+        "experience": "5+ years in development",
+        "lead": "Team lead of 3–4 people",
+        "location": "Almaty",
+        "founder": "Founder of the suslicketeam studio"
+      },
+      "timeline": {
+        "title": "Experience",
+        "items": {
+          "health": {
+            "role": "Full Stack developer",
+            "title": "HealthTech — AI teleradiology",
+            "period": "2024 — present",
+            "body": "Django, FastAPI, Celery, Vue; DICOM/PACS. A remote study-reporting platform running in 10+ clinics in 6 languages."
+          },
+          "admp": {
+            "role": "Team lead",
+            "title": "ADMP PRO",
+            "body": "A Telegram bot for managing Wildberries/Ozon ads. Ad option search went from weeks down to minutes."
+          },
+          "scioffice": {
+            "role": "Developer",
+            "title": "SciOffice",
+            "body": "Full Stack product development in a team."
+          },
+          "kgpk": {
+            "role": "Lead of a 3+1 team",
+            "title": "KGPK",
+            "body": "An attendance and timetable system for a college — from idea to daily use."
+          },
+          "freelance": {
+            "role": "Freelance developer",
+            "title": "Custom web development",
+            "period": "2020–2022",
+            "body": "First commercial projects: custom web development, full cycle from requirements to delivery."
+          }
+        }
+      },
+      "stack": {
+        "title": "Stack"
+      },
+      "links": {
+        "title": "Where to go next",
+        "body": "The detailed profile lives on LinkedIn. The resume as a single file is one button away."
+      }
+    },
+    "hi": {
+      "chip": "Just saying hi",
+      "metaTitle": "Andrei Pustovoi — hi!",
+      "metaDescription": "That guy with the QR code on his t-shirt. I write code, live in Almaty and love meeting new people. Come say hi.",
+      "heading": "Hi! I'm Andrei — that guy with the QR on his shirt",
+      "intro": "If you scanned the QR off a t-shirt — yes, it's real and it leads here. By day I write code (Python, JS, all sorts of AI), and the QR is my way of meeting interesting people without business cards.",
+      "about": {
+        "title": "Who I even am",
+        "body": "A developer and founder of the small studio suslicketeam, living in Almaty. The nick suslicke — yes, it's from 'suslik', the ground squirrel: consider it my mascot. And the QR t-shirt is an experiment: business cards get lost, a QR on your chest doesn't."
+      },
+      "interests": {
+        "title": "What I'm into",
+        "code": {
+          "title": "Code and pet projects",
+          "body": "This site with its voxel QR is a pet project too: my own backend, my own server, all built by hand."
+        },
+        "ai": {
+          "title": "AI and automation",
+          "body": "I love handing routine over to machines — from marketplace bots to AI in medicine."
+        },
+        "people": {
+          "title": "Meeting new people",
+          "body": "That's literally why you're here. The best projects and stories start with a 'hi'."
+        },
+        "almaty": {
+          "title": "Almaty",
+          "body": "I live and work here. If you're around too — we can just grab a coffee."
+        }
+      },
+      "outro": {
+        "title": "Just say hi",
+        "body": "No reason or formality needed. Tell me where you spotted the QR — I'm genuinely curious how far it travels."
+      }
+    }
+  },
+  "cta": {
+    "telegram": "Message on Telegram",
+    "whatsapp": "Message on WhatsApp",
+    "saveContact": "Save contact",
+    "downloadCv": "Download CV (PDF)",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "instagram": "Instagram",
+    "writeHello": "Just say hello",
+    "copyPhone": "Copy the number",
+    "copied": "Copied",
+    "prefill": {
+      "biz": "Hi Andrei! Writing from suslicke.com — I have a business project to discuss.",
+      "dev": "Hi! I'm from suslicke.com, would love to talk development.",
+      "hr": "Hello Andrei! Reaching out about a role — found you via suslicke.com.",
+      "hi": "Hey! Saw your QR — decided to say hi :)"
+    }
+  },
+  "consent": {
+    "text": "I use PostHog to understand how people read this site. Without consent, only my own cookieless counter remains.",
+    "accept": "Okay",
+    "decline": "No, thanks"
+  },
+  "event": {
+    "badge": "I'm at {name} right now — come say hi!",
+    "action": "Message on Telegram"
+  },
+  "survey": {
+    "title": "Hi! I'm at {name} right now",
+    "question": "Where did you find my QR?",
+    "here": "Right here, at the event",
+    "street": "Shirt on the street",
+    "friend": "A friend sent it",
+    "other": "Other",
+    "otherPlaceholder": "Tell me how you found it…",
+    "submit": "Send",
+    "skip": "Skip",
+    "thanks": "Thanks! Nice to meet you."
+  },
+  "footer": {
+    "rights": "© Andrei Pustovoi. All rights reserved.",
+    "studio": "Founder of the suslicketeam studio"
+  },
+  "meta": {
+    "title": "Andrei Pustovoi — Full Stack developer, Almaty",
+    "description": "Python, JS and AI: teleradiology for 10+ clinics, marketplace bots, the suslicketeam studio. Team lead, 5+ years of experience. Almaty."
+  },
+  "notFound": {
+    "title": "This page doesn't exist",
+    "back": "Back home"
+  },
+  "a11y": {
+    "themeLight": "Switch to light theme",
+    "themeDark": "Switch to dark theme",
+    "language": "Language"
+  }
+}

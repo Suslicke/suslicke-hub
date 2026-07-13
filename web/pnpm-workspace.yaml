@@ -1,0 +1,11 @@
+# Single-package repo (empty workspace list keeps pnpm from scanning up).
+packages: []
+
+# Postinstall build scripts allowlist (pnpm 10+ blocks them by default).
+allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': true
+  # core-js postinstall only prints a funding banner — safe to skip.
+  core-js: false
+  sharp: true
+  unrs-resolver: true

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Warm-steppe favicon: sand tile + terracotta QR-voxel mark.
+       Colors track the site palette (see globals.css); the embedded media
+       query flips the tile to the evening-blue dark background. -->
+  <style>
+    .bg { fill: #f4ede0; }
+    .fg { fill: #a4512e; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #181d2e; }
+      .fg { fill: #d98d5f; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="7"/>
+  <!-- finder patterns -->
+  <g class="fg">
+    <path d="M5 5h9v9H5zm2 2v5h5V7z"/>
+    <path d="M18 5h9v9h-9zm2 2v5h5V7z"/>
+    <path d="M5 18h9v9H5zm2 2v5h5v-5z"/>
+    <rect x="8" y="8" width="3" height="3"/>
+    <rect x="21" y="8" width="3" height="3"/>
+    <rect x="8" y="21" width="3" height="3"/>
+    <!-- scattered modules -->
+    <rect x="17" y="17" width="3" height="3"/>
+    <rect x="22" y="19" width="3" height="3"/>
+    <rect x="19" y="23" width="3" height="3"/>
+    <rect x="24" y="24" width="3" height="3"/>
+  </g>
+</svg>
