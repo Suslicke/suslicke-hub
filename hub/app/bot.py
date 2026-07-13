@@ -112,10 +112,13 @@ async def cmd_event(msg: Message, command: CommandObject):
                 cleared = bool(cfg.event_description or cfg.event_image or cfg.event_links)
                 stale_image = cfg.event_image
                 cfg.event_description = ""
+                cfg.event_description_en = ""
                 cfg.event_image = ""
                 cfg.event_links = []
             cfg.event_active = True
             cfg.event_name = name
+            if new_slug != cfg.event_slug:
+                cfg.event_name_en = ""  # a different event: EN name is stale too
             cfg.event_slug = new_slug
             cfg.event_started_at = utcnow()
             cfg.utm_campaign = cfg.event_slug  # atomic: banner + utm never diverge

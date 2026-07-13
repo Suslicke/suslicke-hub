@@ -100,9 +100,10 @@ function normalizeEventStatus(data: unknown): EventStatus | null {
  * Resolves to null while the hub is down or no event is active, so the static
  * page never depends on it.
  */
-export function fetchEventStatus(): Promise<EventStatus | null> {
+export function fetchEventStatus(locale?: string): Promise<EventStatus | null> {
   if (!eventStatusPromise) {
-    eventStatusPromise = fetch("/api/event-status")
+    const qs = locale ? `?locale=${encodeURIComponent(locale)}` : "";
+    eventStatusPromise = fetch(`/api/event-status${qs}`)
       .then((res) => (res.ok ? (res.json() as Promise<unknown>) : null))
       .then(normalizeEventStatus)
       .catch(() => null);

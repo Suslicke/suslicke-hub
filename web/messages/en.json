@@ -303,7 +303,9 @@
     "otherPlaceholder": "Tell me how you found it…",
     "submit": "Send",
     "skip": "Skip",
-    "thanks": "Thanks! Nice to meet you."
+    "thanks": "Thanks! Nice to meet you.",
+    "contactLabel": "Leave a contact and I will text you first (optional)",
+    "contactPlaceholder": "Telegram, phone or email"
   },
   "footer": {
     "title": "Say hello",
@@ -327,5 +329,11 @@
     "themeLight": "Switch to light theme",
     "themeDark": "Switch to dark theme",
     "language": "Language"
+  },
+  "connect": {
+    "title": "Let's talk in person",
+    "body": "I would love to meet you in real life. If we have already met, remind me where. If not yet, that is easy to fix: I am in Almaty and always up for a meeting, a coffee or just a good conversation.",
+    "button": "Message on Telegram",
+    "hint": "I reply fast, usually within an hour"
   }
 }

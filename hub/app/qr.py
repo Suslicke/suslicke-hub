@@ -31,9 +31,11 @@ DEFAULT_CFG = {
     "utm_campaign": "networking",
     "event_active": False,
     "event_name": "",
+    "event_name_en": "",
     "event_slug": "",
     "event_default_persona": "",
     "event_description": "",
+    "event_description_en": "",
     "event_image": "",
     "event_links": [],
 }
@@ -93,17 +95,19 @@ async def qr_redirect(request: Request):
 
 
 @router.get("/api/event-status")
-async def event_status():
+async def event_status(locale: str = ""):
     """Public event card for the site popup. Nothing private leaks: only the
-    curated event fields, and all of them empty/null while the event is off."""
+    curated event fields, and all of them empty/null while the event is off.
+    `?locale=en` serves the English name/description when filled (ru fallback)."""
     cfg = await get_cfg()
     if not cfg["event_active"]:
         return {"active": False, "name": "", "description": "", "image": None, "links": []}
     image = cfg["event_image"]
+    en = locale.lower().startswith("en")
     return {
         "active": True,
-        "name": cfg["event_name"],
-        "description": cfg["event_description"],
+        "name": (cfg["event_name_en"] if en and cfg["event_name_en"] else cfg["event_name"]),
+        "description": (cfg["event_description_en"] if en and cfg["event_description_en"] else cfg["event_description"]),
         "image": f"/api/media/{image}" if image else None,
         "links": [
             {"label": str(l.get("label", "")), "url": str(l.get("url", ""))}
@@ -146,20 +150,27 @@ class SurveyIn(BaseModel):
     answer: str = Field(pattern="^(here|street|friend|other)$")
     free_text: str = Field(default="", max_length=500)
     persona: str = Field(default="", max_length=10)
+    contact: str = Field(default="", max_length=200)
+    locale: str = Field(default="", max_length=5)
     utm: dict = Field(default_factory=dict)
 
 
 @router.post("/api/event-survey")
-async def event_survey(payload: SurveyIn):
+async def event_survey(payload: SurveyIn, request: Request):
     if payload.answer == "other" and not payload.free_text.strip():
         return JSONResponse({"ok": False, "reason": "free_text_required"}, status_code=422)
     cfg = await get_cfg()
+    ua = request.headers.get("user-agent", "")
     async with session_factory() as s:
         s.add(SurveyAnswer(
             event_slug=cfg["event_slug"],
             answer=payload.answer,
             free_text=payload.free_text.strip(),
             persona=payload.persona,
+            contact=payload.contact.strip(),
+            locale=payload.locale,
+            ua_hash=ua_hash(ua),
+            visitor_hash=visitor_hash(client_ip(request), ua, date.today()),
             utm={k: str(v)[:100] for k, v in list(payload.utm.items())[:8]},
         ))
         await s.commit()
@@ -168,6 +179,8 @@ async def event_survey(payload: SurveyIn):
         f"🔥 Опрос ({label}): ответ «{payload.answer}»"
         + (f", «{payload.free_text.strip()[:200]}»" if payload.free_text.strip() else "")
         + (f", персона {payload.persona}" if payload.persona else "")
+        + (f"\n📱 КОНТАКТ: {payload.contact.strip()[:200]}" if payload.contact.strip() else "")
+        + (f" [{payload.locale}]" if payload.locale else "")
     )
     return {"ok": True}
 

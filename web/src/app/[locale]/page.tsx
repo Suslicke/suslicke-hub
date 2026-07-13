@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { LiveEventPill, LiveEventSection } from "@/components/engage/live-event";
 import { PersonaChips } from "@/components/engage/persona-chips";
+import { ConnectCta } from "@/components/connect-cta";
 import { JsonLd } from "@/components/json-ld";
 import { Reveal } from "@/components/reveal";
 import { SceneMount } from "@/components/scene/scene-mount";
@@ -179,6 +180,7 @@ export default async function HomePage({
           ))}
         </div>
       </section>
+      <ConnectCta />
     </main>
   );
 }

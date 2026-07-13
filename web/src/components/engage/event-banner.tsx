@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import {useTranslations, useLocale} from "next-intl";
 import { useEffect, useState, type MouseEvent } from "react";
 
 import {
@@ -26,18 +26,19 @@ import {
  */
 export function EventBanner() {
   const t = useTranslations("event");
+  const locale = useLocale();
   const tCta = useTranslations("cta");
   const [status, setStatus] = useState<EventStatus | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetchEventStatus().then((data) => {
+    fetchEventStatus(locale).then((data) => {
       if (!cancelled && data) setStatus(data);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [locale]);
 
   if (!status) return null;
 

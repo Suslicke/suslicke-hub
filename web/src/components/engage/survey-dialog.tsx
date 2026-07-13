@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import {useTranslations, useLocale} from "next-intl";
 import {
   useCallback,
   useEffect,
@@ -78,11 +78,13 @@ function resolvePersona(): string {
  */
 export function SurveyDialog() {
   const t = useTranslations("survey");
+  const locale = useLocale();
 
   const [eventName, setEventName] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [freeText, setFreeText] = useState("");
+  const [contact, setContact] = useState("");
   const [done, setDone] = useState(false);
   const [utm, setUtm] = useState<UtmParams>({});
 
@@ -94,7 +96,7 @@ export function SurveyDialog() {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    fetchEventStatus().then((data) => {
+    fetchEventStatus(locale).then((data) => {
       if (cancelled || !data) return;
       if (alreadySeen(slugifyEventName(data.name))) return;
       // UTM is attached to the submission when present, but no longer gates
@@ -116,7 +118,7 @@ export function SurveyDialog() {
       window.removeEventListener("sl:utm", refreshUtm);
       if (timer) clearTimeout(timer);
     };
-  }, []);
+  }, [locale]);
 
   // Lock body scroll + swallow Escape at the document level while open —
   // closing is allowed only via ✕ / Skip.
@@ -179,6 +181,8 @@ export function SurveyDialog() {
         answer,
         free_text: trimmed,
         persona,
+        contact: contact.trim().slice(0, 200),
+        locale,
         utm: utm as Record<string, string>,
       }),
       keepalive: true,
@@ -293,6 +297,21 @@ export function SurveyDialog() {
                 className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               />
             )}
+
+            <label className="block text-left">
+              <span className="mb-1 block text-xs text-muted-foreground">
+                {t("contactLabel")}
+              </span>
+              <input
+                value={contact}
+                onChange={(event) => setContact(event.target.value)}
+                placeholder={t("contactPlaceholder")}
+                maxLength={200}
+                inputMode="email"
+                autoComplete="off"
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              />
+            </label>
 
             <div className="flex items-center gap-2">
               <button

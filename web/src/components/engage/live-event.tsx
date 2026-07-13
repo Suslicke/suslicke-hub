@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useTranslations } from "next-intl";
+import {useTranslations, useLocale} from "next-intl";
 import { useEffect, useState, type MouseEvent } from "react";
 
 import {
@@ -23,17 +23,18 @@ import {
  * LCP.
  */
 function useEventStatus(): EventStatus | null {
+  const locale = useLocale();
   const [status, setStatus] = useState<EventStatus | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetchEventStatus().then((data) => {
+    fetchEventStatus(locale).then((data) => {
       if (!cancelled && data) setStatus(data);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [locale]);
 
   return status;
 }

@@ -30,8 +30,10 @@ class QrConfig(Base):
     utm_campaign: Mapped[str] = mapped_column(String(60), default="networking")
     event_active: Mapped[bool] = mapped_column(Boolean, default=False)
     event_name: Mapped[str] = mapped_column(String(120), default="")
+    event_name_en: Mapped[str] = mapped_column(String(120), default="")
     event_slug: Mapped[str] = mapped_column(String(60), default="")
     event_description: Mapped[str] = mapped_column(Text, default="")
+    event_description_en: Mapped[str] = mapped_column(Text, default="")
     event_image: Mapped[str] = mapped_column(String(200), default="")  # filename in /srv/data/media
     event_links: Mapped[list] = mapped_column(JSON, default=list)  # [{"label": str, "url": str}] max 5
     event_default_persona: Mapped[str] = mapped_column(String(10), default="")
@@ -60,6 +62,10 @@ class SurveyAnswer(Base):
     free_text: Mapped[str] = mapped_column(Text, default="")
     persona: Mapped[str] = mapped_column(String(10), default="")
     utm: Mapped[dict] = mapped_column(JSON, default=dict)
+    contact: Mapped[str] = mapped_column(String(200), default="")
+    locale: Mapped[str] = mapped_column(String(5), default="")
+    ua_hash: Mapped[str] = mapped_column(String(16), default="")
+    visitor_hash: Mapped[str] = mapped_column(String(64), default="")
 
 
 class PageView(Base):
@@ -91,6 +97,12 @@ _MIGRATIONS = (
     "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_description TEXT NOT NULL DEFAULT ''",
     "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_image VARCHAR(200) NOT NULL DEFAULT ''",
     "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_links JSON NOT NULL DEFAULT '[]'",
+    "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_name_en VARCHAR(120) NOT NULL DEFAULT ''",
+    "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_description_en TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE survey_answers ADD COLUMN IF NOT EXISTS contact VARCHAR(200) NOT NULL DEFAULT ''",
+    "ALTER TABLE survey_answers ADD COLUMN IF NOT EXISTS locale VARCHAR(5) NOT NULL DEFAULT ''",
+    "ALTER TABLE survey_answers ADD COLUMN IF NOT EXISTS ua_hash VARCHAR(16) NOT NULL DEFAULT ''",
+    "ALTER TABLE survey_answers ADD COLUMN IF NOT EXISTS visitor_hash VARCHAR(64) NOT NULL DEFAULT ''",
 )
 
 

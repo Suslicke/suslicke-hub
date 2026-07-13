@@ -274,10 +274,14 @@ def _event_section(cfg) -> str:
 <div><div>{state}</div>
 <div class="mut small">Включение атомарно ставит utm_campaign = slug ивента и шлёт уведомление в бот. Также: /event start &lt;Название&gt;.</div></div>
 </div>
-<label class="field">Название
+<label class="field">Название (RU)
 <input name="name" maxlength="120" value="{_esc(cfg.event_name)}" placeholder="Название ивента"></label>
-<label class="field">Описание (показывается в попапе на сайте)
+<label class="field">Название (EN, для английской версии сайта; пусто = показывается RU)
+<input name="name_en" maxlength="120" value="{_esc(cfg.event_name_en)}" placeholder="Event name"></label>
+<label class="field">Описание (RU, показывается на сайте)
 <textarea name="description" rows="3" maxlength="2000" placeholder="Пара предложений о ивенте…">{_esc(cfg.event_description)}</textarea></label>
+<label class="field">Описание (EN; пусто = показывается RU)
+<textarea name="description_en" rows="3" maxlength="2000" placeholder="A couple of sentences about the event…">{_esc(cfg.event_description_en)}</textarea></label>
 <div class="field"><span>Ссылки (до {MAX_EVENT_LINKS}, пара «название + URL»; пустые строки игнорируются)</span>
 <div class="stack" style="gap:.5rem">{link_rows}</div></div>
 <div class="field"><span>Персона по умолчанию (параметр <code>as</code> в /qr-редиректе)</span>
@@ -369,9 +373,10 @@ async def _dashboard(note_key: str = "") -> HTMLResponse:
     ) or "<tr><td class=mut colspan=2>пока пусто</td></tr>"
     surveys_html = "".join(
         f"<tr><td>{r.ts:%d.%m %H:%M}</td><td>{_esc(r.event_slug) or '·'}</td>"
-        f"<td>{_esc(r.answer)}</td><td>{_esc(r.free_text) or '·'}</td><td>{_esc(r.persona) or '·'}</td></tr>"
+        f"<td>{_esc(r.answer)}</td><td>{_esc(r.free_text) or '·'}</td><td>{_esc(r.persona) or '·'}</td>"
+        f"<td>{('<b>' + _esc(r.contact) + '</b>') if r.contact else '·'}</td><td>{_esc(r.locale) or '·'}</td></tr>"
         for r in recent_surveys
-    ) or "<tr><td class=mut colspan=5>пока пусто</td></tr>"
+    ) or "<tr><td class=mut colspan=7>пока пусто</td></tr>"
     settings_html = "".join(
         f"""<tr><td>{_esc(r.key)}</td><td><form method="post" action="/hub/settings" class="row">
 <input type="hidden" name="key" value="{_esc(r.key)}">
@@ -416,7 +421,7 @@ async def _dashboard(note_key: str = "") -> HTMLResponse:
 </div>
 
 <section><h2>Последние ответы опроса</h2>
-<table><tr><th>когда</th><th>ивент</th><th>ответ</th><th>текст</th><th>персона</th></tr>{surveys_html}</table></section>
+<table><tr><th>когда</th><th>ивент</th><th>ответ</th><th>текст</th><th>персона</th><th>контакт</th><th>язык</th></tr>{surveys_html}</table></section>
 
 <section><h2>site_settings</h2><table>{settings_html}</table>
 <form method="post" action="/hub/settings" class="row" style="margin-top:.7rem">
@@ -497,6 +502,8 @@ async def hub_event(request: Request):
     want = bool(form.get("active"))
     name = str(form.get("name", "")).strip()[:120]
     description = str(form.get("description", "")).strip()[:2000]
+    name_en = str(form.get("name_en", "")).strip()[:120]
+    description_en = str(form.get("description_en", "")).strip()[:2000]
     persona = str(form.get("default_persona", ""))
     links = parse_event_links(
         [str(form.get(f"link_label_{i}", "")) for i in range(MAX_EVENT_LINKS)],
@@ -510,6 +517,8 @@ async def hub_event(request: Request):
         async with session_factory() as s:
             cfg = await s.get(QrConfig, 1)
             cfg.event_description = description
+            cfg.event_name_en = name_en
+            cfg.event_description_en = description_en
             cfg.event_links = links
             cfg.event_default_persona = persona if persona in PERSONAS else ""
             cfg.updated_by = "hub-admin"
@@ -520,7 +529,9 @@ async def hub_event(request: Request):
         cfg = await s.get(QrConfig, 1)
         was = cfg.event_active
         cfg.event_name = name
+        cfg.event_name_en = name_en
         cfg.event_description = description
+        cfg.event_description_en = description_en
         cfg.event_links = links
         cfg.event_default_persona = persona if persona in PERSONAS else ""
         if want:
