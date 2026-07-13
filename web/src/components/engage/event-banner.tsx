@@ -64,7 +64,8 @@ export function EventBanner() {
       role="status"
       className="border-b border-border"
       style={{
-        backgroundColor: "color-mix(in oklab, var(--accent) 12%, var(--background))",
+        backgroundImage:
+          "linear-gradient(90deg, color-mix(in oklab, var(--accent) 18%, var(--background)) 0%, color-mix(in oklab, var(--accent) 8%, var(--background)) 100%)",
       }}
     >
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 text-sm sm:px-6">

@@ -3,7 +3,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { PersonaChips } from "@/components/engage/persona-chips";
 import { JsonLd } from "@/components/json-ld";
+import { Reveal } from "@/components/reveal";
 import { SceneMount } from "@/components/scene/scene-mount";
+import { SectionHeading } from "@/components/section-heading";
 import { HI_INTERESTS } from "@/content/facts";
 import { siteConfig, type Locale } from "@/lib/config";
 import { buildMetadata } from "@/lib/seo";
@@ -31,8 +33,9 @@ export async function generateMetadata({
 
 /**
  * Neutral home view: server-rendered hero (the name is the LCP), the lazy
- * voxel-QR scene behind it, the "Who are you?" persona chips and a short
- * neutral section (reuses the `hi` copy) for visitors who don't pick a door.
+ * voxel-QR scene as a full-bleed background behind a soft vignette, the
+ * "Who are you?" persona chips and a short neutral section (reuses the `hi`
+ * copy) for visitors who don't pick a door.
  */
 export default async function HomePage({
   params,
@@ -51,25 +54,66 @@ export default async function HomePage({
       <JsonLd data={profilePageJsonLd(locale)} />
 
       {/* Hero — text stays the server-rendered LCP; the scene mounts lazily
-          behind it (absolute, aria-hidden, pointer-events-none). */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 opacity-25 sm:left-1/2 sm:opacity-100">
+          behind it (absolute, aria-hidden, pointer-events-none), under a
+          vignette that fades its edges into the page background. */}
+      <section className="relative -mt-14 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 opacity-50 sm:opacity-100">
           <SceneMount />
         </div>
+        {/* Readability vignette above the scene, below the content. */}
+        <div aria-hidden className="hero-vignette pointer-events-none absolute inset-0" />
 
-        <div className="relative z-10 mx-auto flex min-h-[70dvh] max-w-5xl flex-col justify-center gap-8 px-4 py-20 sm:px-6">
-          <div className="flex max-w-2xl flex-col gap-4">
-            <h1 className="font-display text-4xl font-semibold tracking-tight sm:text-6xl">
-              {t("title")}
+        <div className="relative z-10 mx-auto flex min-h-[92dvh] max-w-5xl flex-col justify-center gap-10 px-4 pb-16 pt-28 sm:px-6">
+          <div className="flex max-w-3xl flex-col items-start gap-5">
+            <p className="anim-rise inline-flex items-center gap-2.5 rounded-full border border-border bg-background/70 px-4 py-1.5 text-xs font-medium tracking-wide text-muted-foreground backdrop-blur sm:text-sm">
+              <span aria-hidden className="relative flex size-2">
+                <span
+                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 motion-reduce:animate-none"
+                  style={{ backgroundColor: "var(--accent)" }}
+                />
+                <span
+                  className="relative inline-flex size-2 rounded-full"
+                  style={{ backgroundColor: "var(--accent)" }}
+                />
+              </span>
+              {t("badge")}
+            </p>
+
+            {/* The LCP — no entrance animation, gradient ink only. */}
+            <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">
+              <span className="text-gradient-accent">{t("title")}</span>
             </h1>
-            <p className="max-w-xl text-lg text-muted-foreground">
+
+            <p
+              className="anim-rise max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
+              style={{ animationDelay: "0.1s" }}
+            >
               {t("tagline")}
             </p>
           </div>
 
-          <PersonaChips className="max-w-2xl" />
+          <div className="anim-rise" style={{ animationDelay: "0.2s" }}>
+            <PersonaChips className="max-w-3xl" />
+          </div>
 
-          <p className="text-xs text-muted-foreground">{t("scrollHint")}</p>
+          <p
+            className="anim-rise flex items-center gap-2 text-xs text-muted-foreground"
+            style={{ animationDelay: "0.35s" }}
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="animate-drift size-4 motion-reduce:animate-none"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 4v16m0 0-5-5m5 5 5-5" />
+            </svg>
+            {t("scrollHint")}
+          </p>
         </div>
       </section>
 
@@ -78,40 +122,43 @@ export default async function HomePage({
         aria-labelledby="home-about"
         className="mx-auto max-w-5xl px-4 py-16 sm:px-6"
       >
-        <h2
-          id="home-about"
-          className="font-display text-2xl font-semibold tracking-tight sm:text-3xl"
-        >
-          {tHi("about.title")}
-        </h2>
-        <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
-          {tHi("about.body")}
-        </p>
+        <Reveal>
+          <SectionHeading id="home-about">{tHi("about.title")}</SectionHeading>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {tHi("about.body")}
+          </p>
+        </Reveal>
       </section>
 
       <section
         aria-labelledby="home-interests"
         className="mx-auto max-w-5xl px-4 pb-8 sm:px-6"
       >
-        <h2
-          id="home-interests"
-          className="font-display text-2xl font-semibold tracking-tight sm:text-3xl"
-        >
-          {tHi("interests.title")}
-        </h2>
+        <Reveal>
+          <SectionHeading id="home-interests">
+            {tHi("interests.title")}
+          </SectionHeading>
+        </Reveal>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {HI_INTERESTS.map((interest) => (
-            <article
+          {HI_INTERESTS.map((interest, index) => (
+            <Reveal
               key={interest}
-              className="rounded-card border border-border bg-muted/40 p-6"
+              delay={index * 0.07}
+              className={
+                index === 0 || index === HI_INTERESTS.length - 1
+                  ? "sm:col-span-2"
+                  : undefined
+              }
             >
-              <h3 className="font-display text-lg font-semibold">
-                {tHi(`interests.${interest}.title`)}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {tHi(`interests.${interest}.body`)}
-              </p>
-            </article>
+              <article className="card-surface card-lift bg-noise h-full p-6 sm:p-7">
+                <h3 className="font-display text-lg font-semibold">
+                  {tHi(`interests.${interest}.title`)}
+                </h3>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                  {tHi(`interests.${interest}.body`)}
+                </p>
+              </article>
+            </Reveal>
           ))}
         </div>
       </section>

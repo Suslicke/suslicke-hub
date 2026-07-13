@@ -16,7 +16,7 @@ export const LINKS = {
   github: "https://github.com/Suslicke",
   linkedin: "https://www.linkedin.com/in/suslicke",
   instagram: "https://www.instagram.com/suslicke",
-  email: "suslicketeam@gmail.com",
+  email: "admin@suslicketeam.com",
   phone: "+77474772302",
   /** The studio's WhatsApp — used by the biz persona CTA. */
   studioWhatsApp: "+77066998879",
@@ -36,7 +36,12 @@ export const HAS_CV = false;
 /* Stack                                                               */
 /* ------------------------------------------------------------------ */
 
-export type StackGroupId = "backend" | "frontend" | "data" | "infra";
+export type StackGroupId =
+  | "backend"
+  | "frontend"
+  | "mobile"
+  | "data"
+  | "infra";
 
 export interface StackGroup {
   /** Matches `personas.dev.stack.groups.<id>` in messages. */
@@ -45,9 +50,13 @@ export interface StackGroup {
 }
 
 export const STACK_GROUPS: readonly StackGroup[] = [
-  { id: "backend", items: ["Python", "Django", "FastAPI", "Celery"] },
-  { id: "frontend", items: ["TypeScript", "React", "Next.js", "Vue"] },
-  { id: "data", items: ["PostgreSQL", "Redis", "Kafka"] },
+  { id: "backend", items: ["Python", "Django", "FastAPI", "Celery", "Go"] },
+  {
+    id: "frontend",
+    items: ["TypeScript", "JavaScript", "React", "Next.js", "Vue"],
+  },
+  { id: "mobile", items: ["Flutter", "React Native"] },
+  { id: "data", items: ["PostgreSQL", "Redis", "Kafka", "RabbitMQ"] },
   { id: "infra", items: ["Docker", "AWS"] },
 ] as const;
 
@@ -86,8 +95,23 @@ export const PROJECTS: readonly ProjectFact[] = [
   { slug: "freelance", tech: [] },
 ] as const;
 
-/** The subset (and order) of cases shown on the biz persona page. */
-export const BIZ_CASE_SLUGS = ["health", "admp", "kgpk"] as const;
+/**
+ * The cases shown on the biz persona page (and their order): the personal
+ * flagship cases plus verified cases from the suslicketeam studio
+ * portfolio. The first entry is the featured (full-width) card; the
+ * summary NDA card goes last. Copy lives in `personas.biz.cases.<slug>`.
+ */
+export const BIZ_CASE_SLUGS = [
+  "health",
+  "admp",
+  "xaid",
+  "loyrush",
+  "exchangeBridge",
+  "animeenigma",
+  "scioffice",
+  "kgpk",
+  "nda",
+] as const;
 export type BizCaseSlug = (typeof BIZ_CASE_SLUGS)[number];
 
 /* ------------------------------------------------------------------ */
@@ -107,6 +131,20 @@ export const DEV_SITE_ITEMS = [
 
 /** Matches `personas.hr.facts.<id>` in messages. */
 export const HR_FACTS = ["experience", "lead", "location", "founder"] as const;
+
+/**
+ * Matches `personas.hr.highlights.items.<id>` in messages — resume-verified
+ * achievement stats (value / label / body) rendered at the top of the hr
+ * persona page.
+ */
+export const HR_HIGHLIGHTS = [
+  "integration",
+  "bugs",
+  "language",
+  "mvp",
+  "scale",
+  "team",
+] as const;
 
 /** Matches `personas.hi.interests.<id>` in messages. */
 export const HI_INTERESTS = ["code", "ai", "people", "almaty"] as const;

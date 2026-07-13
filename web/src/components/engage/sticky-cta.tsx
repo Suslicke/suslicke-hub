@@ -129,10 +129,10 @@ export function StickyCta({ persona = null }: StickyCtaProps) {
       ref={barRef}
       className={[
         // Mobile: full-width fixed bottom bar (above the OS home indicator).
-        "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 backdrop-blur",
+        "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/75 backdrop-blur-xl",
         "pb-[env(safe-area-inset-bottom)]",
         // Desktop: compact floating card in the corner.
-        "sm:inset-x-auto sm:right-6 sm:bottom-6 sm:rounded-2xl sm:border sm:shadow-lg sm:shadow-black/10",
+        "sm:inset-x-auto sm:right-6 sm:bottom-6 sm:rounded-2xl sm:border sm:shadow-xl sm:shadow-black/15",
       ].join(" ")}
     >
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-3 sm:px-3 sm:py-2.5">
@@ -142,8 +142,12 @@ export function StickyCta({ persona = null }: StickyCtaProps) {
           rel="noopener noreferrer"
           onClick={handlePrimaryClick}
           data-channel={channel}
-          className="flex h-11 flex-1 items-center justify-center rounded-full px-5 text-sm font-semibold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:flex-none"
-          style={{ backgroundColor: accent, color: "var(--accent-foreground)" }}
+          className="flex h-11 flex-1 items-center justify-center rounded-full px-5 text-sm font-semibold transition-[transform,box-shadow] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none sm:flex-none"
+          style={{
+            backgroundImage: `linear-gradient(135deg, ${accent} 0%, color-mix(in oklab, ${accent} 78%, var(--foreground)) 100%)`,
+            color: "var(--accent-foreground)",
+            boxShadow: `0 6px 18px -8px color-mix(in oklab, ${accent} 65%, transparent)`,
+          }}
         >
           {channel === "whatsapp"
             ? t("whatsapp")
@@ -156,7 +160,7 @@ export function StickyCta({ persona = null }: StickyCtaProps) {
           href="/vcard.vcf"
           download
           onClick={handleVcardClick}
-          className="flex h-11 flex-1 items-center justify-center rounded-full border border-border bg-background px-5 text-sm font-semibold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:flex-none"
+          className="flex h-11 flex-1 items-center justify-center rounded-full border border-foreground/20 bg-transparent px-5 text-sm font-semibold transition-[transform,border-color] hover:-translate-y-0.5 hover:border-foreground/45 active:translate-y-0 motion-reduce:transform-none sm:flex-none"
         >
           {t("saveContact")}
         </a>

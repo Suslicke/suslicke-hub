@@ -56,7 +56,7 @@ export async function generateMetadata({
     metadataBase: new URL(siteConfig.url),
     title: {
       default: t("title"),
-      template: "%s — suslicke.com",
+      template: "%s · suslicke.com",
     },
     description: t("description"),
   };

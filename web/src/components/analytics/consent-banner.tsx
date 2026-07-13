@@ -70,7 +70,7 @@ export function ConsentBanner() {
           "calc(var(--sticky-cta-height, 0px) + env(safe-area-inset-bottom, 0px) + 0.75rem)",
       }}
     >
-      <div className="mx-auto flex max-w-xl flex-col gap-3 rounded-card border border-border bg-background/95 p-4 shadow-lg shadow-foreground/10 backdrop-blur supports-[backdrop-filter]:bg-background/85 sm:flex-row sm:items-center sm:gap-4">
+      <div className="mx-auto flex max-w-xl flex-col gap-3 rounded-card border border-border bg-background/95 p-4 shadow-xl shadow-black/10 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 sm:flex-row sm:items-center sm:gap-4">
         <p className="flex-1 text-sm leading-snug text-muted-foreground">
           {t("text")}
         </p>
@@ -85,7 +85,11 @@ export function ConsentBanner() {
           <button
             type="button"
             onClick={() => decide("granted")}
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-[transform,opacity] hover:opacity-90 active:scale-[0.98]"
+            className="rounded-full px-4 py-2 text-sm font-semibold text-accent-foreground transition-[transform,opacity] hover:opacity-90 active:scale-[0.98]"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, var(--accent) 0%, color-mix(in oklab, var(--accent) 78%, var(--foreground)) 100%)",
+            }}
           >
             {t("accept")}
           </button>

@@ -1,29 +1,30 @@
 "use client";
 
 /**
- * Lazy mount for the voxel-QR hero scene. Mirrors the studio's
- * aurora-mount pattern: the ~200KB three/R3F chunk never blocks the
- * server-rendered hero text (LCP).
+ * Lazy mount for the interactive particle-field hero scene. Mirrors the
+ * studio's aurora-mount pattern: the ~200KB three/R3F chunk never blocks
+ * the server-rendered hero text (LCP).
  *
  * Gate order — decided BEFORE the chunk is even requested:
- *   1. prefers-reduced-motion: reduce  → static SVG QR poster, no download
- *   2. no WebGL                        → static SVG QR poster, no download
- *   3. otherwise                       → requestIdleCallback →
+ *   1. prefers-reduced-motion: reduce  → static gradient-blob poster
+ *   2. viewport < minWidth             → static poster (chunk never fetched)
+ *   3. no WebGL                        → static poster
+ *   4. otherwise                       → requestIdleCallback →
  *      next/dynamic(() => import("./hero-scene"), { ssr: false })
  *
  * The layer is absolute inset-0, aria-hidden and pointer-events-none; the
- * scene's parallax listens to pointermove on window from inside hero-scene,
+ * scene listens to pointer/touch/scroll on window from inside hero-scene,
  * so it needs no pointer events on this layer.
  */
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
-import qrData from "../../../public/qr-matrix.json";
+import { useEffect, useState } from "react";
+import { SUSLIK_PARTS } from "./suslik-shape";
 
 const HeroScene = dynamic(() => import("./hero-scene"), { ssr: false });
 
 type SceneMountProps = {
-  /** Persona accent as a hex color; forwarded to the scene's voxel emissive. */
+  /** Persona accent as a hex color; forwarded to the particle color. */
   accent?: string;
   /**
    * Minimum viewport width (px) at which the WebGL scene is worth mounting.
@@ -34,6 +35,18 @@ type SceneMountProps = {
    */
   minWidth?: number;
 };
+
+/**
+ * Notify a mounted hero scene that the visitor picked a persona: the
+ * particle field morphs into the persona glyph and recolors to its accent.
+ * Safe to call whether or not the scene is (or ever will be) mounted.
+ */
+export function emitPersona(persona: string) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("sl:persona", { detail: { persona } }),
+  );
+}
 
 function supportsWebGL(): boolean {
   try {
@@ -47,33 +60,68 @@ function supportsWebGL(): boolean {
 }
 
 /**
- * Static fallback: the same baked QR matrix rendered as a single SVG path
- * (still scannable). Shown when reduced motion is requested or WebGL is
- * unavailable — in those cases the three.js chunk is never downloaded.
+ * Static fallback: a soft radial-gradient blob with the same suslik-mascot
+ * silhouette the particles assemble into, rendered from the shared analytic
+ * primitives (suslik-shape.ts). Shown when reduced motion is requested or
+ * WebGL is unavailable — in those cases the three.js chunk is never
+ * downloaded. Pure SVG, no external assets.
  */
-export function QrPoster({ accent }: { accent?: string }) {
-  const { size } = qrData;
-  const quiet = 2; // quiet-zone modules around the code
-  const path = useMemo(() => {
-    const parts: string[] = [];
-    for (let i = 0; i < qrData.modules.length; i++) {
-      if (!qrData.modules[i]) continue;
-      const x = (i % size) + quiet;
-      const y = Math.floor(i / size) + quiet;
-      parts.push(`M${x} ${y}h1v1h-1z`);
-    }
-    return parts.join("");
-  }, [size]);
-
-  const box = size + quiet * 2;
+export function HeroPoster({ accent }: { accent?: string }) {
+  const color = accent ?? "#b4552d";
+  const gradientId = "sl-hero-blob";
   return (
     <svg
-      viewBox={`0 0 ${box} ${box}`}
-      className="h-56 w-56 max-w-[64vw] opacity-85"
-      shapeRendering="crispEdges"
+      viewBox="-0.35 -0.12 1.7 1.24"
+      className="h-72 w-72 max-w-[72vw]"
       aria-hidden="true"
     >
-      <path d={path} fill={accent ?? "var(--foreground)"} />
+      <defs>
+        <radialGradient id={gradientId}>
+          <stop offset="0%" stopColor={color} stopOpacity="0.34" />
+          <stop offset="55%" stopColor={color} stopOpacity="0.14" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* organic two-lobe gradient blob behind the mascot */}
+      <ellipse cx="0.52" cy="0.52" rx="0.82" ry="0.6" fill={`url(#${gradientId})`} />
+      <ellipse cx="0.3" cy="0.34" rx="0.5" ry="0.42" fill={`url(#${gradientId})`} />
+      {/* the same silhouette the particle field assembles into */}
+      <g fill={color} opacity="0.85">
+        {SUSLIK_PARTS.map((p, i) => {
+          if (p.kind === "ellipse") {
+            const deg = ((p.rot ?? 0) * 180) / Math.PI;
+            return (
+              <ellipse
+                key={i}
+                cx={p.cx}
+                cy={p.cy}
+                rx={p.rx}
+                ry={p.ry}
+                transform={
+                  p.rot ? `rotate(${deg} ${p.cx} ${p.cy})` : undefined
+                }
+              />
+            );
+          }
+          // Varying-radius capsule ≈ circles lerped along the segment.
+          const steps = 6;
+          return (
+            <g key={i}>
+              {Array.from({ length: steps + 1 }, (_, k) => {
+                const t = k / steps;
+                return (
+                  <circle
+                    key={k}
+                    cx={p.x1 + (p.x2 - p.x1) * t}
+                    cy={p.y1 + (p.y2 - p.y1) * t}
+                    r={p.r1 + (p.r2 - p.r1) * t}
+                  />
+                );
+              })}
+            </g>
+          );
+        })}
+      </g>
     </svg>
   );
 }
@@ -111,7 +159,7 @@ export function SceneMount({ accent, minWidth }: SceneMountProps) {
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       {mode === "poster" ? (
         <div className="flex h-full w-full items-center justify-center">
-          <QrPoster accent={accent} />
+          <HeroPoster accent={accent} />
         </div>
       ) : null}
       {mode === "scene" ? <HeroScene accent={accent} /> : null}

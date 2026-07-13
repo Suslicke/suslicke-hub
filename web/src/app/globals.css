@@ -102,6 +102,13 @@
     color: var(--accent-foreground);
   }
 
+  /* One consistent focus ring across every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -111,5 +118,120 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+@layer utilities {
+  /*
+   * Warm gradient ink for the hero name — accent → foreground sweep.
+   * Follows the persona remap of --accent automatically.
+   */
+  .text-gradient-accent {
+    background-image: linear-gradient(
+      100deg,
+      var(--accent) 0%,
+      color-mix(in oklab, var(--accent) 55%, var(--foreground)) 45%,
+      var(--foreground) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /*
+   * Soft vignette over the full-bleed hero scene: fades the particle layer
+   * into the page background at the edges so the type always stays readable.
+   */
+  .hero-vignette {
+    background:
+      radial-gradient(
+        110% 100% at 25% 45%,
+        var(--background) 0%,
+        color-mix(in oklab, var(--background) 82%, transparent) 38%,
+        color-mix(in oklab, var(--background) 40%, transparent) 60%,
+        transparent 80%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--background) 85%, transparent) 0%,
+        transparent 22%,
+        transparent 72%,
+        var(--background) 100%
+      );
+  }
+
+  /* Faint paper grain — data-URI turbulence, one layer, no requests. */
+  .bg-noise {
+    position: relative;
+  }
+  .bg-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /*
+   * Card surface for bento grids: hairline border, soft accent-tinted
+   * gradient, lift on hover (transform + shadow only).
+   */
+  .card-surface {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    background:
+      linear-gradient(
+        160deg,
+        color-mix(in oklab, var(--accent) 6%, transparent) 0%,
+        transparent 55%
+      ),
+      color-mix(in oklab, var(--muted) 55%, var(--background));
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 32px -12px color-mix(in oklab, var(--accent) 35%, transparent),
+      0 4px 12px -6px rgb(0 0 0 / 0.08);
+    border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-lift:hover {
+      transform: none;
+    }
+  }
+
+  /* Slow float for the scroll hint chevron. */
+  @keyframes sl-drift {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(6px);
+    }
+  }
+  .animate-drift {
+    animation: sl-drift 2.4s ease-in-out infinite;
+  }
+
+  /* CSS-only entrance for server-rendered hero elements (not the h1/LCP). */
+  @keyframes sl-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .anim-rise {
+    animation: sl-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }

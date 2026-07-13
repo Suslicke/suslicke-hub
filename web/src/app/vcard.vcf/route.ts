@@ -19,7 +19,7 @@ const VCARD_LINES = [
   "ORG:suslicketeam",
   "TITLE:Full-Stack & AI Developer",
   "TEL;TYPE=CELL:+77474772302",
-  "EMAIL;TYPE=INTERNET:suslicketeam@gmail.com",
+  "EMAIL;TYPE=INTERNET:admin@suslicketeam.com",
   "ADR;TYPE=WORK:;;;Almaty;;;Kazakhstan",
   "URL:https://suslicke.com",
   "item1.URL:https://www.linkedin.com/in/suslicke",

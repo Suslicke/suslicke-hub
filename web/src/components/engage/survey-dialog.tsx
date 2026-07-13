@@ -228,7 +228,7 @@ export function SurveyDialog() {
         aria-labelledby="sl-survey-title"
         tabIndex={-1}
         onKeyDown={trapTab}
-        className="absolute left-1/2 top-1/2 flex max-h-[85dvh] w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-4 overflow-y-auto rounded-2xl border border-border bg-background p-6 shadow-2xl outline-none"
+        className="absolute left-1/2 top-1/2 flex max-h-[85dvh] w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-4 overflow-y-auto rounded-card border border-border bg-background/95 p-6 shadow-2xl shadow-black/20 outline-none backdrop-blur-xl"
       >
         <div className="flex items-start justify-between gap-3">
           <h2
@@ -313,7 +313,8 @@ export function SurveyDialog() {
                 disabled={!canSubmit}
                 className="h-11 flex-1 rounded-full text-sm font-semibold transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
                 style={{
-                  backgroundColor: "var(--accent)",
+                  backgroundImage:
+                    "linear-gradient(135deg, var(--accent) 0%, color-mix(in oklab, var(--accent) 78%, var(--foreground)) 100%)",
                   color: "var(--accent-foreground)",
                 }}
               >
