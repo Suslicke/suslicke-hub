@@ -1,0 +1,32 @@
+# Compose project name pinned from day one (lesson from the platform rename:
+# default project name follows the directory name; volumes/networks are
+# project-name-prefixed, so pin it before anything depends on it).
+name: suslicke
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    env_file: .env
+    ports:
+      - "127.0.0.1:18432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U suslicke -d suslicke"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: always
+
+  hub:
+    build: ./hub
+    env_file: .env
+    ports:
+      - "127.0.0.1:18001:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  pgdata:
