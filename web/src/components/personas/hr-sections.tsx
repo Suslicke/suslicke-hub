@@ -23,25 +23,27 @@ export default async function HrSections() {
   const tCta = await getTranslations("cta");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-20 px-4 pb-24 sm:px-6">
-      {/* Achievement highlights — resume-verified numbers, stat cards */}
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 pb-24 sm:gap-20 sm:px-6">
+      {/* Achievement highlights — resume-verified numbers, stat cards.
+          Mobile: a 2-up grid so the big numbers read as a punchy scoreboard
+          instead of a long single-file train. */}
       <section aria-labelledby="hr-highlights">
         <Reveal>
           <SectionHeading id="hr-highlights">
             {t("highlights.title")}
           </SectionHeading>
         </Reveal>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {HR_HIGHLIGHTS.map((item, index) => (
             <Reveal key={item} delay={index * 0.06}>
-              <div className="card-surface card-lift bg-noise flex h-full flex-col p-6">
+              <div className="card-surface card-lift bg-noise flex h-full flex-col p-4 sm:p-6">
                 <span className="font-display text-3xl font-semibold tracking-tight text-persona-hr sm:text-4xl">
                   {t(`highlights.items.${item}.value`)}
                 </span>
                 <p className="mt-2 text-sm font-medium leading-snug">
                   {t(`highlights.items.${item}.label`)}
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                   {t(`highlights.items.${item}.body`)}
                 </p>
               </div>
@@ -55,10 +57,10 @@ export default async function HrSections() {
         <Reveal>
           <SectionHeading id="hr-facts">{t("facts.title")}</SectionHeading>
         </Reveal>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {HR_FACTS.map((fact, index) => (
             <Reveal key={fact} delay={index * 0.07}>
-              <div className="card-surface card-lift bg-noise h-full p-5">
+              <div className="card-surface card-lift bg-noise h-full p-4 sm:p-5">
                 <span
                   aria-hidden
                   className="mb-3 block h-1 w-8 rounded-full bg-persona-hr"
@@ -134,7 +136,7 @@ export default async function HrSections() {
       <Reveal>
         <section
           aria-labelledby="hr-links"
-          className="bg-noise rounded-card border border-persona-hr/30 bg-persona-hr/10 p-8 sm:p-10"
+          className="bg-noise rounded-card border border-persona-hr/30 bg-persona-hr/10 p-6 sm:p-10"
         >
           <h2
             id="hr-links"

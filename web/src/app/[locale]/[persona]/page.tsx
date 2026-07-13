@@ -83,17 +83,18 @@ export default async function PersonaPage({
         {/* Compact hero — same full-bleed scene layer as home, persona-
             accented, under a readability vignette. */}
         <section className="relative -mt-14 overflow-hidden">
-          {/* Wrapper is display:none below sm — minWidth={640} stops the
-              WebGL chunk from downloading where it would be invisible. */}
-          <div className="pointer-events-none absolute inset-0 hidden sm:block">
+          {/* minWidth={640} stops the WebGL chunk from downloading below sm —
+              there the cheap persona-tinted SVG poster shows instead (same
+              right-edge composition as the home hero). */}
+          <div className="pointer-events-none absolute inset-0 opacity-70 sm:opacity-100">
             <SceneMount accent={PERSONA_ACCENT_HEX[persona]} minWidth={640} />
           </div>
           <div
             aria-hidden
-            className="hero-vignette pointer-events-none absolute inset-0 hidden sm:block"
+            className="hero-vignette pointer-events-none absolute inset-0"
           />
 
-          <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-start gap-6 px-4 pb-16 pt-28 sm:px-6 sm:pb-24 sm:pt-36">
+          <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-start gap-5 px-4 pb-14 pt-24 sm:gap-6 sm:px-6 sm:pb-24 sm:pt-36">
             <p
               className="anim-rise inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-widest backdrop-blur"
               style={{
@@ -110,8 +111,9 @@ export default async function PersonaPage({
               {t("chip")}
             </p>
 
-            {/* The LCP — no entrance animation. */}
-            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
+            {/* The LCP — no entrance animation. clamp() trades a hair of size
+                on 390px for one line fewer in the long RU headings. */}
+            <h1 className="max-w-3xl font-display text-[clamp(1.9rem,8.6vw,3.75rem)] font-semibold leading-[1.08] tracking-tight">
               <span className="text-gradient-accent">{t("heading")}</span>
             </h1>
 

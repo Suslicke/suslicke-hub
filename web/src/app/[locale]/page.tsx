@@ -57,13 +57,18 @@ export default async function HomePage({
           behind it (absolute, aria-hidden, pointer-events-none), under a
           vignette that fades its edges into the page background. */}
       <section className="relative -mt-14 overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 opacity-50 sm:opacity-100">
+        {/* Live scene everywhere on the home hero: touch interactivity (finger
+            repulsion, tap ripple) is the wow moment for QR visitors, who are
+            mostly on phones. The scene self-reduces particle count on small
+            viewports and idle-loads after LCP; persona pages stay on the
+            cheap SVG poster (minWidth=640) to keep them light. */}
+        <div className="pointer-events-none absolute inset-0 opacity-80 sm:opacity-100">
           <SceneMount />
         </div>
         {/* Readability vignette above the scene, below the content. */}
         <div aria-hidden className="hero-vignette pointer-events-none absolute inset-0" />
 
-        <div className="relative z-10 mx-auto flex min-h-[92dvh] max-w-5xl flex-col justify-center gap-10 px-4 pb-16 pt-28 sm:px-6">
+        <div className="relative z-10 mx-auto flex min-h-[92dvh] max-w-5xl flex-col justify-center gap-8 px-4 pb-12 pt-24 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-28">
           <div className="flex max-w-3xl flex-col items-start gap-5">
             <p className="anim-rise inline-flex items-center gap-2.5 rounded-full border border-border bg-background/70 px-4 py-1.5 text-xs font-medium tracking-wide text-muted-foreground backdrop-blur sm:text-sm">
               <span aria-hidden className="relative flex size-2">
@@ -79,8 +84,10 @@ export default async function HomePage({
               {t("badge")}
             </p>
 
-            {/* The LCP — no entrance animation, gradient ink only. */}
-            <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">
+            {/* The LCP — no entrance animation, gradient ink only. clamp()
+                keeps "Андрей Пустовой" wrapping as clean word-per-line down
+                to 320px instead of breaking mid-word. */}
+            <h1 className="font-display text-[clamp(2.5rem,11.5vw,4.5rem)] font-semibold leading-[1.05] tracking-tight">
               <span className="text-gradient-accent">{t("title")}</span>
             </h1>
 

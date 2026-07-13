@@ -95,6 +95,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    /* Belt-and-suspenders on phones: a single overflowing element must never
+       give the whole page a horizontal pan (clip, unlike hidden, keeps
+       position:sticky working). */
+    overflow-x: clip;
   }
 
   ::selection {
@@ -193,15 +197,23 @@
       box-shadow 0.25s ease,
       border-color 0.25s ease;
   }
-  .card-lift:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 12px 32px -12px color-mix(in oklab, var(--accent) 35%, transparent),
-      0 4px 12px -6px rgb(0 0 0 / 0.08);
-    border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
+  /* Hover-lift only where a real hover exists — on touch the effect would
+     "stick" after a tap. Taps get a quick press-in instead. */
+  @media (hover: hover) {
+    .card-lift:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 12px 32px -12px color-mix(in oklab, var(--accent) 35%, transparent),
+        0 4px 12px -6px rgb(0 0 0 / 0.08);
+      border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
+    }
+  }
+  .card-lift:active {
+    transform: scale(0.99);
   }
   @media (prefers-reduced-motion: reduce) {
-    .card-lift:hover {
+    .card-lift:hover,
+    .card-lift:active {
       transform: none;
     }
   }

@@ -26,7 +26,7 @@ export default async function DevSections() {
   const tCta = await getTranslations("cta");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-20 px-4 pb-24 sm:px-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 pb-24 sm:gap-20 sm:px-6">
       {/* Stack by layer — bento grid */}
       <section aria-labelledby="dev-stack">
         <Reveal>
@@ -102,7 +102,7 @@ export default async function DevSections() {
       <Reveal>
         <section
           aria-labelledby="dev-site"
-          className="bg-noise rounded-card border border-persona-dev/30 bg-persona-dev/10 p-8 sm:p-10"
+          className="bg-noise rounded-card border border-persona-dev/30 bg-persona-dev/10 p-6 sm:p-10"
         >
           <h2
             id="dev-site"

@@ -14,7 +14,7 @@ export default async function BizSections() {
   const t = await getTranslations("personas.biz");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-20 px-4 pb-24 sm:px-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 pb-24 sm:gap-20 sm:px-6">
       {/* Cases — featured first card, bento layout */}
       <section aria-labelledby="biz-cases">
         <Reveal>
@@ -80,7 +80,7 @@ export default async function BizSections() {
       <Reveal>
         <section
           aria-labelledby="biz-studio"
-          className="bg-noise rounded-card border border-persona-biz/30 bg-persona-biz/10 p-8 sm:p-10"
+          className="bg-noise rounded-card border border-persona-biz/30 bg-persona-biz/10 p-6 sm:p-10"
         >
           <h2
             id="biz-studio"

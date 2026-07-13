@@ -96,7 +96,9 @@ export function PersonaChips({ className }: { className?: string }) {
                 <svg
                   aria-hidden
                   viewBox="0 0 24 24"
-                  className="size-4 shrink-0 text-muted-foreground opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0.5 group-hover:opacity-100 motion-reduce:transform-none"
+                  // Touch has no hover — keep the arrow softly visible there
+                  // so the cards clearly read as tappable links.
+                  className="size-4 shrink-0 text-muted-foreground opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0.5 group-hover:opacity-100 pointer-coarse:opacity-60 motion-reduce:transform-none"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"

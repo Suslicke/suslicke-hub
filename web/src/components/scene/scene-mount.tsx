@@ -72,7 +72,11 @@ export function HeroPoster({ accent }: { accent?: string }) {
   return (
     <svg
       viewBox="-0.35 -0.12 1.7 1.24"
-      className="h-72 w-72 max-w-[72vw]"
+      // Mobile (where this poster IS the hero art — the WebGL scene is gated
+      // off): larger, peeking in from the right edge behind the headline.
+      // ≥sm keeps the old centered sizing for the reduced-motion/no-WebGL
+      // fallback of the full scene.
+      className="h-72 w-72 max-w-[72vw] max-sm:-mr-16 max-sm:mt-20 max-sm:h-[22rem] max-sm:w-[22rem] max-sm:max-w-none"
       aria-hidden="true"
     >
       <defs>
@@ -158,7 +162,7 @@ export function SceneMount({ accent, minWidth }: SceneMountProps) {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       {mode === "poster" ? (
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center max-sm:items-start max-sm:justify-end max-sm:overflow-hidden">
           <HeroPoster accent={accent} />
         </div>
       ) : null}

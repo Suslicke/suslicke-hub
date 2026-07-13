@@ -142,7 +142,9 @@ export function StickyCta({ persona = null }: StickyCtaProps) {
           rel="noopener noreferrer"
           onClick={handlePrimaryClick}
           data-channel={channel}
-          className="flex h-11 flex-1 items-center justify-center rounded-full px-5 text-sm font-semibold transition-[transform,box-shadow] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none sm:flex-none"
+          // 13px + px-3 below sm: the long RU labels ("Написать в Telegram")
+          // must stay on ONE line when the two buttons split 390px.
+          className="flex h-11 flex-1 items-center justify-center whitespace-nowrap rounded-full px-3 text-[13px] font-semibold transition-[transform,box-shadow] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none sm:flex-none sm:px-5 sm:text-sm"
           style={{
             backgroundImage: `linear-gradient(135deg, ${accent} 0%, color-mix(in oklab, ${accent} 78%, var(--foreground)) 100%)`,
             color: "var(--accent-foreground)",
@@ -160,7 +162,7 @@ export function StickyCta({ persona = null }: StickyCtaProps) {
           href="/vcard.vcf"
           download
           onClick={handleVcardClick}
-          className="flex h-11 flex-1 items-center justify-center rounded-full border border-foreground/20 bg-transparent px-5 text-sm font-semibold transition-[transform,border-color] hover:-translate-y-0.5 hover:border-foreground/45 active:translate-y-0 motion-reduce:transform-none sm:flex-none"
+          className="flex h-11 flex-1 items-center justify-center whitespace-nowrap rounded-full border border-foreground/20 bg-transparent px-3 text-[13px] font-semibold transition-[transform,border-color] hover:-translate-y-0.5 hover:border-foreground/45 active:translate-y-0 motion-reduce:transform-none sm:flex-none sm:px-5 sm:text-sm"
         >
           {t("saveContact")}
         </a>

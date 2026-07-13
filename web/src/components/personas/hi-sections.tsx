@@ -14,12 +14,12 @@ export default async function HiSections() {
   const tCta = await getTranslations("cta");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-20 px-4 pb-24 sm:px-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 pb-24 sm:gap-20 sm:px-6">
       {/* About */}
       <Reveal>
         <section
           aria-labelledby="hi-about"
-          className="bg-noise rounded-card border border-persona-hi/30 bg-persona-hi/10 p-8 sm:p-10"
+          className="bg-noise rounded-card border border-persona-hi/30 bg-persona-hi/10 p-6 sm:p-10"
         >
           <h2
             id="hi-about"
