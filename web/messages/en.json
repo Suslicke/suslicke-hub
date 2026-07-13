@@ -129,7 +129,7 @@
         "title": "How this site works",
         "intro": "This site is its own case study. No magic, just decisions you can poke at:",
         "items": {
-          "frontend": "Next.js 15 (App Router) + React Three Fiber: the voxel QR in the hero is a real, scannable matrix assembled from particles in a single InstancedMesh.",
+          "frontend": "Next.js 15 (App Router) + React Three Fiber: the hero suslik is thousands of particles in a single draw call, morphing into persona glyphs and scattering away from your finger. Custom shader, zero prebuilt 3D assets.",
           "hub": "The backend is suslicke-hub: FastAPI + an aiogram bot on my own VPS. The shirt QR points at /qr, and I change campaigns and config straight from Telegram.",
           "fallback": "An nginx fallback: if the hub goes down, nginx answers with the redirect itself, so the shirt QR can't die as long as nginx is alive.",
           "counter": "The visit counter is my own Postgres table, no cookies: a daily hash instead of tracking. PostHog runs only with consent."
@@ -138,7 +138,7 @@
       },
       "outro": {
         "title": "Want to talk code?",
-        "body": "Message me on Telegram: architecture, the voxels in the hero, or your project."
+        "body": "Message me on Telegram: architecture, the particles in the hero, or your project."
       }
     },
     "hr": {
@@ -243,7 +243,7 @@
         "title": "What I'm into",
         "code": {
           "title": "Code and pet projects",
-          "body": "This site with its voxel QR is a pet project too: my own backend, my own server, all built by hand."
+          "body": "This site is a pet project too: a WebGL particle suslik, my own backend, my own server, all built by hand."
         },
         "ai": {
           "title": "AI and automation",

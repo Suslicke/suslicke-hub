@@ -6,7 +6,7 @@
  * ONE THREE.Points with a custom ShaderMaterial (~3–6k particles, adaptive
  * by viewport width). Particles fly in from a loose cloud and assemble into
  * the suslik-mascot silhouette (sampled analytically — see suslik-shape.ts).
- * Choosing a persona morphs the field into that persona's glyph ("₸", "</>",
+ * Choosing a persona morphs the field into that persona's glyph ("$", "</>",
  * "CV", "👋") and recolors it to the persona accent.
  *
  * Interactivity:

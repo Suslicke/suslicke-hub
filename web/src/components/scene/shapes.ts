@@ -9,7 +9,7 @@
  * - "suslik": the mascot silhouette, rejection-sampled from the analytic
  *   union in suslik-shape.ts, with extra samples biased to the boundary so
  *   the outline reads crisply.
- * - persona glyphs: text drawn on an offscreen 2D canvas ("₸", "</>", "CV",
+ * - persona glyphs: text drawn on an offscreen 2D canvas ("$", "</>", "CV",
  *   "👋"), sampled from the alpha channel — reliable for any font/emoji.
  *
  * Client-only (the glyph sampler touches `document`); called from
@@ -21,7 +21,7 @@ import { insideSuslik, SUSLIK_BBOX } from "./suslik-shape";
 export type SceneShape = "suslik" | "biz" | "dev" | "hr" | "hi";
 
 const PERSONA_GLYPH: Record<Exclude<SceneShape, "suslik">, string> = {
-  biz: "₸",
+  biz: "$",
   dev: "</>",
   hr: "CV",
   hi: "👋",
