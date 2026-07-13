@@ -43,10 +43,18 @@ async def _status_text() -> str:
     d = {k: getattr(cfg, k) for k in (
         "target", "utm_source", "utm_medium", "utm_campaign",
         "event_active", "event_name", "event_slug", "event_default_persona",
+        "event_description", "event_image", "event_links",
     )}
     url = build_redirect_url(settings.site_base_url, d)
     event = f"🟢 ивент: {d['event_name']}" if d["event_active"] else "⚪ ивент выключен"
-    return f"{event}\n/qr ведёт на:\n{url}"
+    content = (
+        "контент ивента: "
+        f"описание {'есть' if d['event_description'] else 'нет'}, "
+        f"картинка {'есть' if d['event_image'] else 'нет'}, "
+        f"ссылок {len(d['event_links'] or [])}"
+        " (редактируется в админке /hub)"
+    )
+    return f"{event}\n{content}\n/qr ведёт на:\n{url}"
 
 
 @router.message(Command("start"))
@@ -94,15 +102,33 @@ async def cmd_event(msg: Message, command: CommandObject):
         name = args[1].strip().strip('"')
         async with session_factory() as s:
             cfg = await s.get(QrConfig, 1)
+            new_slug = slugify(name)
+            stale_image, cleared = "", False
+            if new_slug != cfg.event_slug:
+                # A DIFFERENT event: drop the previous event's rich content,
+                # otherwise the public popup would show the old description /
+                # image / links (and the new slug re-arms the once-per-event
+                # gate on the site, so everyone would see the stale card).
+                cleared = bool(cfg.event_description or cfg.event_image or cfg.event_links)
+                stale_image = cfg.event_image
+                cfg.event_description = ""
+                cfg.event_image = ""
+                cfg.event_links = []
             cfg.event_active = True
             cfg.event_name = name
-            cfg.event_slug = slugify(name)
+            cfg.event_slug = new_slug
             cfg.event_started_at = utcnow()
             cfg.utm_campaign = cfg.event_slug  # atomic: banner + utm never diverge
             cfg.updated_by = "bot"
             await s.commit()
+        if stale_image:
+            _remove_media(stale_image)
         _invalidate()
-        await msg.answer(f"🟢 Ивент «{name}» включён.\n\n{await _status_text()}")
+        note = (
+            "\n🧹 Контент прошлого ивента очищен (описание/картинка/ссылки) — заполни в /hub."
+            if cleared else ""
+        )
+        await msg.answer(f"🟢 Ивент «{name}» включён.{note}\n\n{await _status_text()}")
         return
     if args and args[0] == "stop":
         async with session_factory() as s:
@@ -141,6 +167,12 @@ async def cmd_today(msg: Message):
 def _invalidate() -> None:
     from .qr import invalidate_cfg_cache
     invalidate_cfg_cache()
+
+
+def _remove_media(name: str) -> None:
+    # lazy import: .admin imports this module at top level (notify_admin)
+    from .admin import _remove_media as _rm
+    _rm(name)
 
 
 def create_dispatcher() -> Dispatcher:

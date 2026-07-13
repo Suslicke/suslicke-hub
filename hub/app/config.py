@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://suslicke:suslicke@localhost:18432/suslicke"
     site_base_url: str = "https://suslicke.com"
     hub_admin_password: str = ""
+    media_dir: str = "/srv/data/media"  # compose mounts hubdata:/srv/data
 
     @field_validator("admin_chat_id", mode="before")
     @classmethod

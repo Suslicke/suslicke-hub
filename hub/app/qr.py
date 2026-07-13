@@ -1,17 +1,24 @@
 import asyncio
 import logging
+import os
 import time
 from datetime import date
 
 from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 
 from . import bot as botmod
 from .config import settings
 from .db import PageView, QrConfig, QrScan, SiteSetting, SurveyAnswer, session_factory
-from .helpers import build_redirect_url, looks_like_bot, ua_hash, visitor_hash
+from .helpers import (
+    build_redirect_url,
+    looks_like_bot,
+    safe_media_filename,
+    ua_hash,
+    visitor_hash,
+)
 
 log = logging.getLogger(__name__)
 router = APIRouter()
@@ -26,9 +33,15 @@ DEFAULT_CFG = {
     "event_name": "",
     "event_slug": "",
     "event_default_persona": "",
+    "event_description": "",
+    "event_image": "",
+    "event_links": [],
 }
 _cache: dict = {"at": 0.0, "cfg": DEFAULT_CFG}
 CACHE_TTL = 5.0
+
+# Strong refs for fire-and-forget tasks (asyncio keeps only weak refs).
+_bg_tasks: set[asyncio.Task] = set()
 
 
 async def get_cfg() -> dict:
@@ -71,14 +84,62 @@ async def qr_redirect(request: Request):
         except Exception:
             log.exception("qr scan log failed")
 
-    asyncio.create_task(record())  # never blocks or breaks the redirect
+    # Fire-and-forget, but keep a strong reference: the loop holds only weak
+    # refs to tasks, so an unreferenced task can be GC'd before it runs.
+    task = asyncio.create_task(record())
+    _bg_tasks.add(task)
+    task.add_done_callback(_bg_tasks.discard)
     return RedirectResponse(url, status_code=307)
 
 
 @router.get("/api/event-status")
 async def event_status():
+    """Public event card for the site popup. Nothing private leaks: only the
+    curated event fields, and all of them empty/null while the event is off."""
     cfg = await get_cfg()
-    return {"active": cfg["event_active"], "name": cfg["event_name"] if cfg["event_active"] else ""}
+    if not cfg["event_active"]:
+        return {"active": False, "name": "", "description": "", "image": None, "links": []}
+    image = cfg["event_image"]
+    return {
+        "active": True,
+        "name": cfg["event_name"],
+        "description": cfg["event_description"],
+        "image": f"/api/media/{image}" if image else None,
+        "links": [
+            {"label": str(l.get("label", "")), "url": str(l.get("url", ""))}
+            for l in (cfg["event_links"] or [])
+            if isinstance(l, dict)
+        ][:5],
+    }
+
+
+_MEDIA_TYPES = {
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "png": "image/png",
+    "webp": "image/webp",
+}
+
+
+@router.get("/api/media/{filename}")
+async def media(filename: str):
+    """Public serving of uploaded event images (uuid-named, admin-uploaded)."""
+    safe = safe_media_filename(filename)
+    if safe is None:
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    path = os.path.realpath(os.path.join(settings.media_dir, safe))
+    # belt-and-braces: safe_media_filename already forbids traversal
+    if not path.startswith(os.path.realpath(settings.media_dir) + os.sep) or not os.path.isfile(path):
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    ext = safe.rsplit(".", 1)[1].lower()
+    return FileResponse(
+        path,
+        media_type=_MEDIA_TYPES[ext],
+        headers={
+            "Cache-Control": "public, max-age=3600",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
 
 
 class SurveyIn(BaseModel):

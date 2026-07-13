@@ -7,22 +7,22 @@ import {
   buildPrefillText,
   buildTelegramUrl,
   CONTACT,
+  fetchEventStatus,
   getStoredUtm,
+  LIVE_COLOR,
   trackEvent,
+  type EventStatus,
 } from "./engage-lib";
 
-interface EventStatus {
-  active: boolean;
-  name: string;
-}
-
 /**
- * Thin event-mode banner meant to sit above the header. Fetches
- * `/api/event-status` (nginx → hub, proxy-cached 30s) after mount and, when an
- * event is active, shows a pulsing dot + "I'm at {name} right now" + an inline
- * Telegram CTA (the visitor is likely 20 meters away — shortest path wins).
- * Renders nothing while loading, on error, or when no event is active, so the
- * static page never waits on the hub.
+ * Thin event-mode banner meant to sit above the header on EVERY page. Reads
+ * the shared `fetchEventStatus()` (nginx → hub, proxy-cached 30s; one request
+ * per page load across banner/pill/card/survey) after mount and, when an
+ * event is active, shows a pulsing live dot + "I'm at {name} right now" + an
+ * inline Telegram CTA (the visitor is likely 20 meters away — shortest path
+ * wins). Styled in the shared LIVE_COLOR so it reads as one system with the
+ * hero LIVE pill. Renders nothing while loading, on error, or when no event
+ * is active, so the static page never waits on the hub.
  */
 export function EventBanner() {
   const t = useTranslations("event");
@@ -30,18 +30,13 @@ export function EventBanner() {
   const [status, setStatus] = useState<EventStatus | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/event-status", { signal: controller.signal })
-      .then((res) => (res.ok ? (res.json() as Promise<EventStatus>) : null))
-      .then((data) => {
-        if (data && data.active && typeof data.name === "string") {
-          setStatus(data);
-        }
-      })
-      .catch(() => {
-        // hub down / aborted — banner simply doesn't appear
-      });
-    return () => controller.abort();
+    let cancelled = false;
+    fetchEventStatus().then((data) => {
+      if (!cancelled && data) setStatus(data);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!status) return null;
@@ -62,21 +57,24 @@ export function EventBanner() {
   return (
     <div
       role="status"
-      className="border-b border-border"
+      className="border-b"
       style={{
-        backgroundImage:
-          "linear-gradient(90deg, color-mix(in oklab, var(--accent) 18%, var(--background)) 0%, color-mix(in oklab, var(--accent) 8%, var(--background)) 100%)",
+        borderColor: `color-mix(in oklab, ${LIVE_COLOR} 30%, var(--border))`,
+        backgroundImage: `linear-gradient(90deg, color-mix(in oklab, ${LIVE_COLOR} 16%, var(--background)) 0%, color-mix(in oklab, ${LIVE_COLOR} 6%, var(--background)) 100%)`,
       }}
     >
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 text-sm sm:px-6">
         <span aria-hidden className="relative flex size-2 shrink-0">
           <span
             className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 motion-reduce:animate-none"
-            style={{ backgroundColor: "var(--accent)" }}
+            style={{ backgroundColor: LIVE_COLOR }}
           />
           <span
             className="relative inline-flex size-2 rounded-full"
-            style={{ backgroundColor: "var(--accent)" }}
+            style={{
+              backgroundColor: LIVE_COLOR,
+              boxShadow: `0 0 8px color-mix(in oklab, ${LIVE_COLOR} 80%, transparent)`,
+            }}
           />
         </span>
         <span className="min-w-0 flex-1 font-medium">
@@ -89,7 +87,7 @@ export function EventBanner() {
           onClick={handleClick}
           className="shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none"
           style={{
-            backgroundColor: "var(--accent)",
+            backgroundColor: LIVE_COLOR,
             color: "var(--accent-foreground)",
           }}
         >

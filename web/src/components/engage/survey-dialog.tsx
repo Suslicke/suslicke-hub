@@ -12,6 +12,7 @@ import {
 import { isPersona, PERSONA_STORAGE_KEY } from "@/lib/config";
 
 import {
+  fetchEventStatus,
   getStoredUtm,
   persistUtm,
   slugifyEventName,
@@ -23,10 +24,10 @@ import {
 const ANSWERS = ["here", "street", "friend", "other"] as const;
 type Answer = (typeof ANSWERS)[number];
 
-// Shown only to visitors whose FIRST-touch utm_source is one of these.
-const TRIGGER_SOURCES = new Set(["shirt", "qr"]);
-// Small delay so the page settles (and the consent banner is seen first).
-const SHOW_DELAY_MS = 1200;
+// Generous delay so the visitor reads the page first (and the consent banner
+// is seen) — the survey now targets EVERYONE during an event, so it must not
+// hit them in the face on arrival.
+const SHOW_DELAY_MS = 6000;
 
 function seenKey(slug: string): string {
   return `sl_ev_${slug}`;
@@ -65,14 +66,15 @@ function resolvePersona(): string {
 }
 
 /**
- * Event-mode survey popup ("Did you see the QR at {name}?"). Shown ONLY when
- * all three hold: an event is active (`/api/event-status`), the first-touch
- * `utm_source` ∈ {shirt, qr}, and `localStorage sl_ev_<slug(name)>` is unset
- * (once per event). Closes only via ✕ / Skip — outside clicks and Escape are
- * swallowed so the consent banner can't dismiss it (studio QrWelcome
- * semantics), implemented as a lightweight hand-rolled dialog (no radix dep)
- * with a focus-trap-lite. Submits to `/api/event-survey` (hub → Telegram) and
- * fires a consent-gated `qr_survey_response` analytics event.
+ * Event-mode survey popup ("how did you find me?"). Shown when BOTH hold: an
+ * event is active (`/api/event-status`) and `localStorage sl_ev_<slug(name)>`
+ * is unset (once per event) — no UTM gate: during an event the owner wants to
+ * ask every visitor, QR or not, after a ~6s settle delay. Closes only via
+ * ✕ / Skip — outside clicks and Escape are swallowed so the consent banner
+ * can't dismiss it (studio QrWelcome semantics), implemented as a lightweight
+ * hand-rolled dialog (no radix dep) with a focus-trap-lite. Submits to
+ * `/api/event-survey` (hub → Telegram) and fires a consent-gated
+ * `qr_survey_response` analytics event.
  */
 export function SurveyDialog() {
   const t = useTranslations("survey");
@@ -89,43 +91,29 @@ export function SurveyDialog() {
 
   // Eligibility: resolve after mount (storage + fetch are client-only).
   useEffect(() => {
-    const controller = new AbortController();
+    let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    let name: string | null = null;
 
-    function maybeShow() {
-      if (!name) return;
+    fetchEventStatus().then((data) => {
+      if (cancelled || !data) return;
+      if (alreadySeen(slugifyEventName(data.name))) return;
+      // UTM is attached to the submission when present, but no longer gates
+      // the popup — during an event everyone gets asked, once per event.
       persistUtm(window.location.search);
-      const stored = getStoredUtm();
-      if (!stored.utm_source || !TRIGGER_SOURCES.has(stored.utm_source)) return;
-      if (alreadySeen(slugifyEventName(name))) return;
-      setUtm(stored);
-      setEventName(name);
-      if (timer) clearTimeout(timer);
+      setUtm(getStoredUtm());
+      setEventName(data.name);
       timer = setTimeout(() => setOpen(true), SHOW_DELAY_MS);
+    });
+
+    // UTM may be captured by another component after our fetch resolves —
+    // refresh the payload copy (does not affect eligibility).
+    function refreshUtm() {
+      setUtm(getStoredUtm());
     }
-
-    fetch("/api/event-status", { signal: controller.signal })
-      .then((res) =>
-        res.ok
-          ? (res.json() as Promise<{ active: boolean; name: string }>)
-          : null,
-      )
-      .then((data) => {
-        if (data && data.active && typeof data.name === "string" && data.name) {
-          name = data.name;
-          maybeShow();
-        }
-      })
-      .catch(() => {
-        // hub down / aborted — no survey
-      });
-
-    // UTM may be captured by another component after our fetch resolves.
-    window.addEventListener("sl:utm", maybeShow);
+    window.addEventListener("sl:utm", refreshUtm);
     return () => {
-      controller.abort();
-      window.removeEventListener("sl:utm", maybeShow);
+      cancelled = true;
+      window.removeEventListener("sl:utm", refreshUtm);
       if (timer) clearTimeout(timer);
     };
   }, []);

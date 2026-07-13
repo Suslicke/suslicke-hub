@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { LiveEventPill, LiveEventSection } from "@/components/engage/live-event";
 import { PersonaChips } from "@/components/engage/persona-chips";
 import { JsonLd } from "@/components/json-ld";
 import { Reveal } from "@/components/reveal";
@@ -84,6 +85,11 @@ export default async function HomePage({
               {t("badge")}
             </p>
 
+            {/* Event mode: pulsing "Live at {name}" pill, client-only —
+                renders nothing unless the hub reports an active event, so the
+                hero LCP never waits on it. */}
+            <LiveEventPill />
+
             {/* The LCP — no entrance animation, gradient ink only. clamp()
                 keeps "Андрей Пустовой" wrapping as clean word-per-line down
                 to 320px instead of breaking mid-word. */}
@@ -123,6 +129,10 @@ export default async function HomePage({
           </p>
         </div>
       </section>
+
+      {/* Event mode: rich live-event card (image, description, links, TG
+          CTA). Client-only, absent unless an event is active. */}
+      <LiveEventSection />
 
       {/* Neutral brief — a couple of sections from the `hi` copy. */}
       <section

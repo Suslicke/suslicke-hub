@@ -286,11 +286,18 @@
     "badge": "I'm at {name} right now, come say hi!",
     "action": "Message on Telegram"
   },
+  "live": {
+    "badge": "Live at {name}",
+    "title": "I'm here right now",
+    "come": "Come say hi, I'm somewhere around.",
+    "tg": "I'm here, message me on Telegram",
+    "prefill": "Hi! I'm at {name} too, where can I find you?"
+  },
   "survey": {
     "title": "Hi! I'm at {name} right now",
-    "question": "Where did you find my QR?",
-    "here": "Right here, at the event",
-    "street": "Shirt on the street",
+    "question": "By the way, how did you get here?",
+    "here": "I'm at this event too",
+    "street": "Saw the QR on a shirt",
     "friend": "A friend sent it",
     "other": "Other",
     "otherPlaceholder": "Tell me how you found it…",

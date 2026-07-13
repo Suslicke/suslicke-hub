@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, BigInteger, Boolean, DateTime, String, Text
+from sqlalchemy import JSON, BigInteger, Boolean, DateTime, String, Text, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -31,6 +31,9 @@ class QrConfig(Base):
     event_active: Mapped[bool] = mapped_column(Boolean, default=False)
     event_name: Mapped[str] = mapped_column(String(120), default="")
     event_slug: Mapped[str] = mapped_column(String(60), default="")
+    event_description: Mapped[str] = mapped_column(Text, default="")
+    event_image: Mapped[str] = mapped_column(String(200), default="")  # filename in /srv/data/media
+    event_links: Mapped[list] = mapped_column(JSON, default=list)  # [{"label": str, "url": str}] max 5
     event_default_persona: Mapped[str] = mapped_column(String(10), default="")
     event_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
@@ -81,11 +84,21 @@ class SiteSetting(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
 
 
+# create_all only creates missing TABLES — it never adds columns to existing
+# ones. Additive columns land via idempotent ALTERs on startup (still no
+# alembic: single-owner schema, migrate for the first breaking change).
+_MIGRATIONS = (
+    "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_description TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_image VARCHAR(200) NOT NULL DEFAULT ''",
+    "ALTER TABLE qr_config ADD COLUMN IF NOT EXISTS event_links JSON NOT NULL DEFAULT '[]'",
+)
+
+
 async def init_db() -> None:
-    # ponytail: create_all instead of alembic — single-owner schema, add
-    # migrations when the first breaking column change actually happens.
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        for ddl in _MIGRATIONS:
+            await conn.execute(text(ddl))
     async with session_factory() as s:
         if await s.get(QrConfig, 1) is None:
             s.add(QrConfig(id=1))

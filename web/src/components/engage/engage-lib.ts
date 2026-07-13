@@ -30,6 +30,87 @@ export const CONTACT = {
 export const SITE_HOST = "suslicke.com";
 
 // ---------------------------------------------------------------------------
+// Event status (rich-event contract with the hub)
+// ---------------------------------------------------------------------------
+
+export interface EventLink {
+  label: string;
+  url: string;
+}
+
+/**
+ * Public `/api/event-status` payload: when `active`, `name`/`description` are
+ * set, `image` is a same-origin `/api/media/<file>` path (or null) and `links`
+ * holds up to 5 `{label, url}` buttons. Inactive events zero everything out.
+ */
+export interface EventStatus {
+  active: boolean;
+  name: string;
+  description: string;
+  image: string | null;
+  links: EventLink[];
+}
+
+/**
+ * Warm live-red for everything "LIVE" (banner, hero pill, event card, glows).
+ * Deliberately NOT `--accent`: the accent is persona-remapped terracotta,
+ * while LIVE must read as "happening right now" in both themes.
+ */
+export const LIVE_COLOR = "oklch(0.62 0.2 29)";
+
+let eventStatusPromise: Promise<EventStatus | null> | null = null;
+
+/** Defensive parse — the UI never trusts the hub payload shape blindly. */
+function normalizeEventStatus(data: unknown): EventStatus | null {
+  if (!data || typeof data !== "object") return null;
+  const raw = data as Record<string, unknown>;
+  if (raw.active !== true || typeof raw.name !== "string" || !raw.name) {
+    return null;
+  }
+  const links = Array.isArray(raw.links)
+    ? raw.links
+        .filter(
+          (link): link is EventLink =>
+            !!link &&
+            typeof link === "object" &&
+            typeof (link as EventLink).label === "string" &&
+            (link as EventLink).label.trim().length > 0 &&
+            typeof (link as EventLink).url === "string" &&
+            /^https?:\/\//.test((link as EventLink).url),
+        )
+        .slice(0, 5)
+    : [];
+  return {
+    active: true,
+    name: raw.name,
+    description: typeof raw.description === "string" ? raw.description : "",
+    // Same-origin media path only ("/api/media/<file>") — never a foreign URL.
+    // The contract prefix also rejects protocol-relative "//host/…" URLs.
+    image:
+      typeof raw.image === "string" && raw.image.startsWith("/api/media/")
+        ? raw.image
+        : null,
+    links,
+  };
+}
+
+/**
+ * Fetch `/api/event-status` once per page load (module-level promise cache) —
+ * the banner, hero pill, event card and survey all share the same request.
+ * Resolves to null while the hub is down or no event is active, so the static
+ * page never depends on it.
+ */
+export function fetchEventStatus(): Promise<EventStatus | null> {
+  if (!eventStatusPromise) {
+    eventStatusPromise = fetch("/api/event-status")
+      .then((res) => (res.ok ? (res.json() as Promise<unknown>) : null))
+      .then(normalizeEventStatus)
+      .catch(() => null);
+  }
+  return eventStatusPromise;
+}
+
+// ---------------------------------------------------------------------------
 // Messenger URL builders
 // ---------------------------------------------------------------------------
 
