@@ -8,6 +8,7 @@ import {
   TelegramIcon,
 } from "@/components/icons";
 import { LINKS } from "@/content/facts";
+import { Link } from "@/i18n/navigation";
 
 /**
  * Footer: a big closing "write me" block with the visible email, social
@@ -58,14 +59,15 @@ export function SiteFooter() {
           </a>
         </div>
 
-        {/* Social icon links */}
+        {/* Social icon links. rel="me" marks them as identity links
+            (Person.sameAs reciprocity / IndieWeb identity consolidation). */}
         <nav className="flex flex-wrap gap-2.5">
           {SOCIAL_ITEMS.map(({ label, href, Icon }) => (
             <a
               key={label}
               href={href}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="me noopener"
               className={[
                 "inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-4 py-2 text-sm font-medium text-muted-foreground",
                 "transition-[transform,color,border-color,box-shadow] duration-200",
@@ -78,9 +80,21 @@ export function SiteFooter() {
           ))}
         </nav>
 
+        {/* Visible nickname line — "suslicke" must appear as plain text on
+            every page (brand-query signal), not only inside URLs. */}
+        <p className="text-xs text-muted-foreground sm:text-sm">{t("nick")}</p>
+
         {/* Legal / credit row */}
         <div className="flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:text-sm">
-          <p>{t("rights")}</p>
+          <div className="flex flex-col gap-1">
+            <p>{t("rights")}</p>
+            <Link
+              href="/privacy"
+              className="w-fit transition-colors hover:text-accent"
+            >
+              {t("privacy")}
+            </Link>
+          </div>
           <div className="flex flex-col gap-1 sm:items-end">
             <a
               href={LINKS.studio}

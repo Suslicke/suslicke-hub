@@ -17,12 +17,16 @@ ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
 RUN corepack enable
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# NEXT_PUBLIC_* are build-time (inlined). None are set yet — PostHog stays
-# off until its key is passed as a build arg later.
+# NEXT_PUBLIC_* are build-time (inlined). Each analytics provider stays off
+# until its key is passed as a build arg (compose forwards them from .env).
 ARG NEXT_PUBLIC_POSTHOG_KEY=""
 ARG NEXT_PUBLIC_POSTHOG_HOST=""
+ARG NEXT_PUBLIC_GA_ID=""
+ARG NEXT_PUBLIC_YANDEX_METRIKA_ID=""
 ENV NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY \
-    NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST
+    NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST \
+    NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID \
+    NEXT_PUBLIC_YANDEX_METRIKA_ID=$NEXT_PUBLIC_YANDEX_METRIKA_ID
 RUN pnpm build
 
 FROM node:22-alpine AS runner

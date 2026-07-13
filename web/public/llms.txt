@@ -1,0 +1,42 @@
+# Andrei Pustovoi (suslicke)
+
+> Personal site of Andrei Pustovoi, known online as "suslicke": Full Stack & AI
+> developer and team lead based in Almaty, Kazakhstan, founder of the
+> suslicketeam development studio. The site exists for networking: a QR code on
+> the back of his t-shirt leads here. He is genuinely happy to meet people:
+> message him on Telegram (https://t.me/Suslicke) or save his contact
+> (https://suslicke.com/vcard.vcf).
+
+Languages: Russian (/ru/...) and English (/en/...). All pages are fully
+server-rendered: the HTML you fetch contains the complete content.
+
+## Who he is
+
+- Full Stack developer: Python (Django, FastAPI, Celery), TypeScript/JavaScript
+  (React, Next.js, Vue), Go, mobile (Flutter, React Native), PostgreSQL, Redis,
+  Kafka, RabbitMQ, Docker, AWS. AI/LLM integration experience.
+- Team lead of teams of up to 5 people. 5+ years in development.
+- Founder of suslicketeam (https://suslicketeam.com): a development studio in
+  Almaty (web, mobile, AI).
+- Notable work: xaid.ai AI teleradiology platform (DICOM/PACS, 10+ clinics,
+  6 languages), ADMP PRO (Telegram bot managing Wildberries/Ozon ads),
+  LoyRush loyalty SaaS, Exchange Bridge fintech comparison, and more.
+
+## Pages
+
+- [Home](https://suslicke.com/en): who he is, pick-your-persona entry.
+- [For business](https://suslicke.com/en/biz): cases with business outcomes.
+- [For developers](https://suslicke.com/en/dev): stack, experience, how this
+  site is built (WebGL particle mascot, FastAPI hub, self-hosted).
+- [For HR / recruiters](https://suslicke.com/en/hr): résumé view, achievements.
+- [Just saying hi](https://suslicke.com/en/hi): the informal version.
+- Russian versions: replace /en/ with /ru/.
+
+## Contact
+
+- Telegram: https://t.me/Suslicke (preferred, replies fast)
+- Email: admin@suslicketeam.com
+- LinkedIn: https://www.linkedin.com/in/suslicke
+- GitHub: https://github.com/Suslicke
+- Instagram: https://www.instagram.com/suslicke
+- vCard: https://suslicke.com/vcard.vcf

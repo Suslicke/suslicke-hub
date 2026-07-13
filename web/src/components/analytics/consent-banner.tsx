@@ -7,18 +7,11 @@ import { useEffect, useState } from "react";
 import {
   analyticsEnabled,
   CONSENT_EVENT,
-  CONSENT_STORAGE_KEY,
   readStoredConsent,
+  storeConsent,
   type ConsentDecision,
 } from "@/lib/analytics";
-
-function storeConsent(decision: ConsentDecision): void {
-  try {
-    window.localStorage.setItem(CONSENT_STORAGE_KEY, decision);
-  } catch {
-    // ignore storage failures (quota, disabled storage, private mode)
-  }
-}
+import { Link } from "@/i18n/navigation";
 
 /**
  * Compact bottom consent bar (deliberately not a modal — the single modal
@@ -26,8 +19,9 @@ function storeConsent(decision: ConsentDecision): void {
  * stored under `sl_consent`; a decision dispatches the `sl:consent`
  * CustomEvent so <PosthogLoader/> can start without a reload.
  *
- * Renders nothing when PostHog env keys are absent: no analytics — nothing to
- * consent to. The first-party hit counter is cookieless and consent-free.
+ * Renders nothing when no consent-gated provider (PostHog, GA4, Yandex
+ * Metrika) is configured: no analytics — nothing to consent to. The
+ * first-party hit counter is cookieless and consent-free.
  *
  * Sits above the sticky CTA bar via `--sticky-cta-height` (a CSS variable the
  * CTA bar sets on :root; falls back to 0px when absent).
@@ -72,7 +66,13 @@ export function ConsentBanner() {
     >
       <div className="mx-auto flex max-w-xl flex-col gap-3 rounded-card border border-border bg-background/95 p-4 shadow-xl shadow-black/10 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 sm:flex-row sm:items-center sm:gap-4">
         <p className="flex-1 text-sm leading-snug text-muted-foreground">
-          {t("text")}
+          {t("text")}{" "}
+          <Link
+            href="/privacy"
+            className="whitespace-nowrap underline underline-offset-2 transition-colors hover:text-foreground"
+          >
+            {t("more")}
+          </Link>
         </p>
         <div className="flex shrink-0 items-center gap-2">
           <button

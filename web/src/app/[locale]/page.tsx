@@ -30,6 +30,9 @@ export async function generateMetadata({
     path: "",
     title: t("title"),
     description: t("description"),
+    // The home title already ends with the "suslicke" nickname — the
+    // layout's "%s · suslicke.com" template would duplicate it.
+    titleAbsolute: true,
   });
 }
 

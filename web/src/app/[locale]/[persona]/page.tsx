@@ -4,6 +4,7 @@ import { ConnectCta } from "@/components/connect-cta";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
+import { JsonLd } from "@/components/json-ld";
 import { PersonaTransition } from "@/components/persona-transition";
 import BizSections from "@/components/personas/biz-sections";
 import DevSections from "@/components/personas/dev-sections";
@@ -19,6 +20,7 @@ import {
   type Persona,
 } from "@/lib/config";
 import { buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 
 const PERSONA_SECTIONS: Record<Persona, ComponentType> = {
   biz: BizSections,
@@ -75,11 +77,20 @@ export default async function PersonaPage({
   setRequestLocale(locale);
 
   const t = await getTranslations(`personas.${persona}`);
+  const tMeta = await getTranslations("meta");
   const Sections = PERSONA_SECTIONS[persona];
 
   return (
     // Sticky-CTA clearance lives on the footer (--sticky-cta-height), not here.
     <main className="flex-1" data-persona={persona}>
+      <JsonLd
+        data={breadcrumbJsonLd(
+          locale,
+          tMeta("breadcrumbHome"),
+          t("chip"),
+          `/${persona}`,
+        )}
+      />
       <PersonaTransition persona={persona}>
         {/* Compact hero — same full-bleed scene layer as home, persona-
             accented, under a readability vignette. */}

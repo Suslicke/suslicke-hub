@@ -5,9 +5,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { ConsentBanner } from "@/components/analytics/consent-banner";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { HitBeacon } from "@/components/analytics/hit-beacon";
 import { PosthogLoader } from "@/components/analytics/posthog-loader";
+import { YandexMetrika } from "@/components/analytics/yandex-metrika";
 import { AsPersonaRedirect } from "@/components/engage/as-persona-redirect";
+import { JsonLd } from "@/components/json-ld";
 import { EventBanner } from "@/components/engage/event-banner";
 import { StickyCtaRoute } from "@/components/engage/sticky-cta-route";
 import { SurveyDialog } from "@/components/engage/survey-dialog";
@@ -16,6 +19,7 @@ import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/lib/config";
+import { personJsonLd, websiteJsonLd } from "@/lib/structured-data";
 
 import "../globals.css";
 
@@ -93,6 +97,10 @@ export default async function LocaleLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider>
+            {/* Site-wide entity graph: #person + #website. Page-level
+                schemas (ProfilePage, BreadcrumbList) reference these @ids. */}
+            <JsonLd data={personJsonLd()} />
+            <JsonLd data={websiteJsonLd()} />
             <div className="flex min-h-dvh flex-col">
               <EventBanner />
               <SiteHeader />
@@ -107,6 +115,8 @@ export default async function LocaleLayout({
             <SurveyDialog />
             <ConsentBanner />
             <PosthogLoader />
+            <GoogleAnalytics />
+            <YandexMetrika />
             {/* HitBeacon also owns first-touch UTM capture (`sl_utm`). */}
             <HitBeacon />
             {/* /qr event deep-link: `/?as=<persona>` → `/{persona}`. */}

@@ -9,7 +9,7 @@
   "personas": {
     "biz": {
       "chip": "Business",
-      "metaTitle": "Andrei Pustovoi - development for business",
+      "metaTitle": "Development for business | Andrei Pustovoi",
       "metaDescription": "AI teleradiology for 10+ clinics in 6 languages, ADMP PRO for Wildberries/Ozon: ad option search cut from weeks to minutes. Founder of the suslicketeam studio. Almaty.",
       "heading": "I turn business problems into working products",
       "intro": "For 5+ years I've been writing code that earns money instead of just sitting pretty in a repository. Below are real projects and what they did for the business. And if the job is bigger than one person, I have a studio.",
@@ -83,7 +83,7 @@
     },
     "dev": {
       "chip": "Developer",
-      "metaTitle": "Andrei Pustovoi - Full Stack Python/JS/AI",
+      "metaTitle": "Full Stack Python/JS/AI | Andrei Pustovoi",
       "metaDescription": "Django, FastAPI, Celery, React, Next.js, Vue, PostgreSQL, Kafka, Docker, AWS. DICOM/PACS in production, team lead. Plus an honest breakdown of how this site works.",
       "heading": "Stack, experience and zero marketing",
       "intro": "Full Stack with a lean towards Python backends and AI. 5+ years in production: from teleradiology DICOM streams to Telegram bots that run marketplace ads. I also build mobile apps with Flutter and React Native. Below: the stack, the experience, and a breakdown of the very site you're reading.",
@@ -138,7 +138,7 @@
     },
     "hr": {
       "chip": "HR / recruiter",
-      "metaTitle": "Andrei Pustovoi - Full Stack developer resume",
+      "metaTitle": "Full Stack developer resume | Andrei Pustovoi",
       "metaDescription": "5+ years of experience, team lead of teams of up to 5 people. HealthTech (DICOM/PACS, 10+ clinics), ADMP PRO, SciOffice, KGPK. Python, TypeScript, AI. Almaty. LinkedIn and CV as PDF.",
       "heading": "A resume with no fluff",
       "intro": "Full Stack developer and team lead: Python (Django, FastAPI, Celery), TypeScript (React, Next.js, Vue), PostgreSQL, Kafka, Docker, AWS. 5+ years of commercial experience, led teams of up to 5 people. Based in Almaty.",
@@ -226,7 +226,7 @@
     },
     "hi": {
       "chip": "Just saying hi",
-      "metaTitle": "Andrei Pustovoi - hi!",
+      "metaTitle": "Hi! | Andrei Pustovoi",
       "metaDescription": "That guy with the QR code on his t-shirt. I write code, live in Almaty and love meeting new people. Come say hi.",
       "heading": "Hi! I'm Andrei, that guy with the QR on his shirt",
       "intro": "If you scanned the QR off a t-shirt: yes, it's real and it leads here. By day I write code (Python, JS, all sorts of AI), and the QR is my way of meeting interesting people without business cards.",
@@ -278,9 +278,51 @@
     }
   },
   "consent": {
-    "text": "I use PostHog to understand how people read this site. Without consent, only my own cookieless counter remains.",
+    "text": "I use analytics (PostHog, Google Analytics and Yandex Metrica with session recording) to understand how people read this site. Nothing of that loads until you agree: only my own cookieless counter runs.",
+    "more": "Learn more",
     "accept": "Okay",
     "decline": "No, thanks"
+  },
+  "privacy": {
+    "metaTitle": "Privacy",
+    "metaDescription": "What suslicke.com collects: a first-party cookieless counter always, and PostHog, Google Analytics and Yandex Metrica with Webvisor only after consent.",
+    "title": "Privacy",
+    "updated": "Updated: July 2026",
+    "intro": "This is the personal site of Andrei Pustovoi. All I need is modest analytics: to understand where people come from and what they read. Below is an honest description of what is collected and when.",
+    "sections": {
+      "firstParty": {
+        "title": "First-party counter (always on)",
+        "body": "The site sends an anonymous hit to its own server: the page, the language, the traffic source (UTM tags). No cookies, no identifiers, no visitor profile. This is the only data collection before your decision in the consent banner."
+      },
+      "consent": {
+        "title": "Third-party analytics: only after consent",
+        "body": "Until you press the accept button in the banner, no third-party script is loaded and no request leaves for any third-party service. The decision is stored in your browser (localStorage, key sl_consent); withdrawing it is as easy as granting: use the button below, or clear the site data."
+      },
+      "posthog": {
+        "title": "PostHog (EU)",
+        "body": "Product analytics: page views, clicks, session recordings. The data is processed on PostHog servers in the European Union."
+      },
+      "ga": {
+        "title": "Google Analytics",
+        "body": "Google web analytics (GA4): visits, traffic sources, events. Loads only after consent."
+      },
+      "metrika": {
+        "title": "Yandex Metrica and Webvisor",
+        "body": "Yandex web analytics: visits, sources, click maps. Webvisor is enabled: it records session activity (mouse movement, scrolling, clicks). The Metrica script loads only after consent, so no recording happens before it."
+      },
+      "processors": {
+        "title": "Data processors",
+        "body": "PostHog Inc., Google (Google Analytics) and Yandex (Yandex Metrica) process the analytics data on my behalf as processors. I do not sell the data or share it with anyone else."
+      },
+      "contact": {
+        "title": "Questions",
+        "body": "Write to admin@suslicketeam.com if you want to clarify anything or ask for your data to be deleted."
+      }
+    },
+    "withdraw": {
+      "note": "Consent to third-party analytics is currently granted. After withdrawal the page reloads and the third-party scripts stop loading.",
+      "button": "Withdraw consent"
+    }
   },
   "event": {
     "badge": "I'm at {name} right now, come say hi!",
@@ -314,11 +356,14 @@
     "subtitle": "Any reason works: a project, a role, or just a hi. Telegram is the fastest.",
     "rights": "© Andrei Pustovoi. All rights reserved.",
     "made": "Made by me. The code is open, so is the heart",
-    "studio": "Founder of the suslicketeam studio"
+    "studio": "Founder of the suslicketeam studio",
+    "nick": "Online I'm suslicke",
+    "privacy": "Privacy"
   },
   "meta": {
-    "title": "Andrei Pustovoi - Full Stack developer, Almaty",
-    "description": "Python, JS and AI: teleradiology for 10+ clinics, marketplace bots, the suslicketeam studio. Team lead, 5+ years of experience. Almaty."
+    "title": "Andrei Pustovoi (suslicke) | Full Stack & AI Developer in Almaty",
+    "description": "Andrei Pustovoi (Андрей Пустовой), suslicke online. Full Stack & AI developer in Almaty, founder of the suslicketeam studio. Python, JS, teleradiology for 10+ clinics.",
+    "breadcrumbHome": "Home"
   },
   "notFound": {
     "title": "The suslik ran off with this page",

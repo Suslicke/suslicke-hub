@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 import {
-  analyticsEnabled,
   CONSENT_EVENT,
   POSTHOG_HOST,
   POSTHOG_KEY,
+  posthogEnabled,
   readStoredConsent,
 } from "@/lib/analytics";
 
@@ -31,17 +31,20 @@ export function PosthogLoader() {
   const lastCapturedPath = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!analyticsEnabled || startedRef.current) return;
-
-    let cancelled = false;
+    if (!posthogEnabled || startedRef.current) return;
 
     const start = () => {
       if (startedRef.current) return;
       startedRef.current = true;
 
+      // Deliberately NOT cancelled on unmount: init + the `window.posthog`
+      // assignment are window-scoped singleton side effects, safe to finish
+      // after the component is gone. A cancellation flag here broke dev
+      // StrictMode (mount #1 started the import and set startedRef, its
+      // cleanup cancelled it, mount #2 bailed on startedRef — PostHog never
+      // initialized when consent was already stored).
       void import("posthog-js")
         .then(({ default: posthog }) => {
-          if (cancelled) return;
           // `__loaded` guards double-init across StrictMode / fast refresh.
           if (!posthog.__loaded) {
             posthog.init(POSTHOG_KEY!, {
@@ -62,8 +65,9 @@ export function PosthogLoader() {
             posthog.register({ site: "suslicke.com" });
           }
           posthogRef.current = posthog;
-          // Expose for `trackEvent()` in @/lib/analytics (and engage-lib).
-          (window as Window & { posthog?: PostHog }).posthog = posthog;
+          // Expose for `trackEvent()` in @/lib/analytics (and engage-lib);
+          // `window.posthog` is declared globally in @/lib/analytics.
+          window.posthog = posthog;
           lastCapturedPath.current = window.location.pathname;
         })
         .catch(() => {
@@ -81,7 +85,6 @@ export function PosthogLoader() {
     };
     window.addEventListener(CONSENT_EVENT, onConsent);
     return () => {
-      cancelled = true;
       window.removeEventListener(CONSENT_EVENT, onConsent);
     };
   }, []);

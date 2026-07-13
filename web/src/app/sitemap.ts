@@ -3,7 +3,11 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/config";
 
 /** Locale-less route paths. Home is the empty string. */
-const ROUTES = ["", ...siteConfig.personas.map((p) => `/${p}`)] as const;
+const ROUTES = [
+  "",
+  ...siteConfig.personas.map((p) => `/${p}`),
+  "/privacy",
+] as const;
 
 /** Absolute URL for a locale + locale-less path. */
 function abs(locale: string, path: string): string {

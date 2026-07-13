@@ -15,6 +15,22 @@ const OG_LOCALE: Record<Locale, string> = {
 
 const SITE_NAME = "suslicke.com";
 
+/**
+ * Default OG/Twitter image, used by every page unless it passes its own
+ * `images`. A build-time static PNG (repo convention: no runtime next/og);
+ * source SVG lives in scripts/og.svg — regenerate with
+ * `rsvg-convert -w 1200 -h 630 scripts/og.svg -o public/og.png`.
+ * `metadataBase` below resolves the relative URL to the canonical origin.
+ */
+const DEFAULT_OG_IMAGES: OgImages = [
+  {
+    url: "/og.png",
+    width: 1200,
+    height: 630,
+    alt: "Andrei Pustovoi (suslicke), Full Stack & AI Developer",
+  },
+];
+
 export interface BuildMetadataArgs {
   /** App locale for this page. */
   locale: Locale;
@@ -22,7 +38,13 @@ export interface BuildMetadataArgs {
   path: string;
   title: string;
   description: string;
-  /** Optional OG/Twitter images (build-time PNGs land in phase 2). */
+  /**
+   * Render the title as-is, bypassing the layout's "%s · suslicke.com"
+   * template. Used by the home page, whose title already contains the
+   * "suslicke" nickname — the template would duplicate it.
+   */
+  titleAbsolute?: boolean;
+  /** Per-page OG/Twitter images; defaults to the site-wide /og.png. */
   images?: OgImages;
 }
 
@@ -41,9 +63,11 @@ export function buildMetadata({
   path,
   title,
   description,
+  titleAbsolute,
   images,
 }: BuildMetadataArgs): Metadata {
   const canonical = localePath(locale, path);
+  const ogImages = images ?? DEFAULT_OG_IMAGES;
 
   // hreflang map: every locale + x-default -> defaultLocale path.
   const languages: Record<string, string> = {};
@@ -54,7 +78,7 @@ export function buildMetadata({
 
   return {
     metadataBase: new URL(siteConfig.url),
-    title,
+    title: titleAbsolute ? { absolute: title } : title,
     description,
     alternates: {
       canonical,
@@ -67,14 +91,17 @@ export function buildMetadata({
       url: canonical,
       siteName: SITE_NAME,
       locale: OG_LOCALE[locale],
-      ...(images ? { images } : {}),
+      alternateLocale: siteConfig.locales
+        .filter((loc) => loc !== locale)
+        .map((loc) => OG_LOCALE[loc]),
+      images: ogImages,
     },
     twitter: {
-      // No dedicated OG image yet (phase 2) — summary card, not large image.
-      card: images ? "summary_large_image" : "summary",
+      // An image is always present (default or per-page) — large card.
+      card: "summary_large_image",
       title,
       description,
-      ...(images ? { images } : {}),
+      images: ogImages,
     },
   };
 }
