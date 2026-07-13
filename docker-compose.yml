@@ -5,7 +5,11 @@ name: suslicke
 
 services:
   web:
-    build: ./web
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_POSTHOG_KEY: ${NEXT_PUBLIC_POSTHOG_KEY:-}
+        NEXT_PUBLIC_POSTHOG_HOST: ${NEXT_PUBLIC_POSTHOG_HOST:-}
     # No env_file: the only runtime-relevant vars (NEXT_PUBLIC_*) are
     # build-time inlined and not set yet (PostHog comes later).
     ports:

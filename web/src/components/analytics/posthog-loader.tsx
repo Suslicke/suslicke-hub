@@ -56,6 +56,10 @@ export function PosthogLoader() {
               capture_pageview: true,
               capture_pageleave: true,
             });
+            // The PostHog project is shared with suslicketeam.com (free
+            // plan): stamp every event from this site with a super property
+            // so the two sites are separable in insights/filters.
+            posthog.register({ site: "suslicke.com" });
           }
           posthogRef.current = posthog;
           // Expose for `trackEvent()` in @/lib/analytics (and engage-lib).
