@@ -36,7 +36,7 @@ import {
   PERSONA_STORAGE_KEY,
   type Persona,
 } from "@/lib/config";
-import { sampleCloud, sampleShape, type SceneShape } from "./shapes";
+import { sampleCloud, sampleGlyph, sampleShape, type SceneShape } from "./shapes";
 
 const DEFAULT_ACCENT = "#b4552d"; // steppe terracotta
 
@@ -47,6 +47,8 @@ const SCATTER_RANGE = 0.8; // scroll scatter completes over 0.8 * viewport heigh
 type HeroSceneProps = {
   /** Persona accent as a hex color (three.js can't parse oklch vars). */
   accent?: string;
+  /** Arbitrary text glyph to assemble instead of the mascot (e.g. "404"). */
+  glyph?: string;
 };
 
 const VERTEX = /* glsl */ `
@@ -170,9 +172,11 @@ function personaFromAccent(accent?: string): Persona | null {
 function ParticleField({
   accent,
   isDark,
+  glyph,
 }: {
   accent: string;
   isDark: boolean;
+  glyph?: string;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const { viewport } = useThree();
@@ -182,10 +186,11 @@ function ParticleField({
   // Initial state, decided once at mount: the page's persona (via accent)
   // wins over a persona remembered in localStorage, then the mascot.
   const [initialShape] = useState<SceneShape>(() => {
+    if (glyph) return "suslik"; // unused when a fixed glyph is set
     return personaFromAccent(accent) ?? storedShape() ?? "suslik";
   });
   const [initialPersonaColor] = useState<string | null>(() => {
-    if (personaFromAccent(accent)) return null; // accent prop already matches
+    if (glyph || personaFromAccent(accent)) return null;
     const stored = storedShape();
     return stored ? PERSONA_ACCENT_HEX[stored] : null;
   });
@@ -193,7 +198,7 @@ function ParticleField({
   // Geometry + material built once, imperatively (no drei).
   const { geometry, material, uniforms } = useMemo(() => {
     const from = sampleCloud(count);
-    const to = sampleShape(initialShape, count);
+    const to = glyph ? sampleGlyph(glyph, count) : sampleShape(initialShape, count);
     const seeds = new Float32Array(count * 4);
     for (let i = 0; i < count; i++) {
       seeds[i * 4] = Math.random();
@@ -231,7 +236,7 @@ function ParticleField({
       blending: THREE.NormalBlending,
     });
     return { geometry, material, uniforms };
-  }, [count, initialShape]);
+  }, [count, initialShape, glyph]);
 
   useEffect(
     () => () => {
@@ -437,7 +442,7 @@ function ParticleField({
   );
 }
 
-export default function HeroScene({ accent = DEFAULT_ACCENT }: HeroSceneProps) {
+export default function HeroScene({ accent = DEFAULT_ACCENT, glyph }: HeroSceneProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(true);
   const [pageVisible, setPageVisible] = useState(true);
@@ -484,7 +489,7 @@ export default function HeroScene({ accent = DEFAULT_ACCENT }: HeroSceneProps) {
         camera={{ position: [0, 0, 7], fov: 40 }}
         onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
-        <ParticleField accent={accent} isDark={isDark} />
+        <ParticleField accent={accent} isDark={isDark} glyph={glyph} />
       </Canvas>
     </div>
   );

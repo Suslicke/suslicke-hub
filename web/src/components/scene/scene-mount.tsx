@@ -34,6 +34,8 @@ type SceneMountProps = {
    * cheap SVG poster renders instead (also invisible there, but free).
    */
   minWidth?: number;
+  /** Arbitrary text the field assembles into instead of the mascot ("404"). */
+  glyph?: string;
 };
 
 /**
@@ -130,7 +132,7 @@ export function HeroPoster({ accent }: { accent?: string }) {
   );
 }
 
-export function SceneMount({ accent, minWidth }: SceneMountProps) {
+export function SceneMount({ accent, minWidth, glyph }: SceneMountProps) {
   // "pending" until the client-side gates have run — renders nothing on the
   // server and on first paint, so there is no hydration mismatch and the
   // hero text stays the LCP either way.
@@ -166,7 +168,7 @@ export function SceneMount({ accent, minWidth }: SceneMountProps) {
           <HeroPoster accent={accent} />
         </div>
       ) : null}
-      {mode === "scene" ? <HeroScene accent={accent} /> : null}
+      {mode === "scene" ? <HeroScene accent={accent} glyph={glyph} /> : null}
     </div>
   );
 }

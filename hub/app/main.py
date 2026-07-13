@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from . import bot as botmod
 from .config import settings
 from .db import init_db
+from .admin import router as admin_router
 from .qr import router
 
 logging.basicConfig(level=logging.INFO)
@@ -37,6 +38,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="suslicke-hub", lifespan=lifespan, docs_url=None, redoc_url=None)
 app.include_router(router)
+app.include_router(admin_router)
 
 
 @app.get("/health")

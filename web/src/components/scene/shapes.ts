@@ -71,7 +71,7 @@ function sampleSuslik(count: number): Float32Array {
   return out;
 }
 
-function sampleGlyph(text: string, count: number): Float32Array {
+export function sampleGlyph(text: string, count: number): Float32Array {
   const W = 640;
   const H = 400;
   const canvas = document.createElement("canvas");

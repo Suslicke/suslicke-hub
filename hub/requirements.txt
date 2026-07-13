@@ -4,3 +4,4 @@ aiogram>=3.15
 sqlalchemy[asyncio]>=2.0.36
 asyncpg>=0.30
 pydantic-settings>=2.6
+python-multipart>=0.0.12

@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     admin_chat_id: int | None = None
     database_url: str = "postgresql+asyncpg://suslicke:suslicke@localhost:18432/suslicke"
     site_base_url: str = "https://suslicke.com"
+    hub_admin_password: str = ""
 
     @field_validator("admin_chat_id", mode="before")
     @classmethod

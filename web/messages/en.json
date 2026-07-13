@@ -315,8 +315,11 @@
     "description": "Python, JS and AI: teleradiology for 10+ clinics, marketplace bots, the suslicketeam studio. Team lead, 5+ years of experience. Almaty."
   },
   "notFound": {
-    "title": "This page doesn't exist",
-    "back": "Back home"
+    "title": "The suslik ran off with this page",
+    "description": "There is nothing at this address. There is, however, a particle suslik: it has already assembled into a 404 and is waiting for you to poke it.",
+    "back": "Back home",
+    "telegram": "Message on Telegram",
+    "hint": "Move your cursor or finger through the particles. Click for a ripple."
   },
   "a11y": {
     "themeLight": "Switch to light theme",
