@@ -12,6 +12,8 @@ import {
 import { isPersona, PERSONA_STORAGE_KEY } from "@/lib/config";
 
 import {
+  buildPrefillText,
+  buildTelegramUrl,
   fetchEventStatus,
   getStoredUtm,
   persistUtm,
@@ -78,6 +80,7 @@ function resolvePersona(): string {
  */
 export function SurveyDialog() {
   const t = useTranslations("survey");
+  const tCta = useTranslations("cta");
   const locale = useLocale();
 
   const [eventName, setEventName] = useState<string | null>(null);
@@ -248,6 +251,27 @@ export function SurveyDialog() {
             </svg>
           </button>
         </div>
+
+        {done && (
+          <div className="flex flex-col gap-4 text-left">
+            <p className="text-sm text-muted-foreground">{t("thanksBody")}</p>
+            <a
+              href={buildTelegramUrl(
+                "Suslicke",
+                buildPrefillText(tCta("prefill.hi"), "/", utm),
+              )}
+              className="h-11 rounded-full text-center text-sm leading-[2.75rem] font-semibold"
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, var(--accent) 0%, color-mix(in oklab, var(--accent) 78%, var(--foreground)) 100%)",
+                color: "var(--accent-foreground)",
+              }}
+              onClick={() => trackEvent("cta_click", { channel: "telegram", source: "survey_thanks" })}
+            >
+              {t("thanksTg")}
+            </a>
+          </div>
+        )}
 
         {!done && (
           <>

@@ -271,10 +271,10 @@
     "copyPhone": "Copy the number",
     "copied": "Copied",
     "prefill": {
-      "biz": "Hi Andrei! Writing from suslicke.com, I have a business project to discuss.",
-      "dev": "Hi! I'm from suslicke.com, would love to talk development.",
-      "hr": "Hello Andrei! Reaching out about a role, found you via suslicke.com.",
-      "hi": "Hey! Saw your QR and decided to say hi :)"
+      "biz": "Hi Andrei! I have a business problem: ... Any idea how to approach it? (found you on suslicke.com)",
+      "dev": "Hey! Fellow developer here. Confess: how did you build the particle suslik? :) By the way, I'm ...",
+      "hr": "Hello Andrei! We are hiring a developer at ..., your profile looks like a great fit. When is a good time for a call?",
+      "hi": "Hi Andrei! 👋 Found you through the QR, let's get acquainted. My name is ..."
     }
   },
   "consent": {
@@ -303,9 +303,11 @@
     "otherPlaceholder": "Tell me how you found it…",
     "submit": "Send",
     "skip": "Skip",
-    "thanks": "Thanks! Nice to meet you.",
+    "thanks": "Thanks! Now let's actually get acquainted 👋",
     "contactLabel": "Leave a contact and I will text you first (optional)",
-    "contactPlaceholder": "Telegram, phone or email"
+    "contactPlaceholder": "Telegram, phone or email",
+    "thanksBody": "Text me right now: I reply fast, and if you are nearby, just come over.",
+    "thanksTg": "Message on Telegram"
   },
   "footer": {
     "title": "Say hello",
@@ -334,6 +336,7 @@
     "title": "Let's talk in person",
     "body": "I would love to meet you in real life. If we have already met, remind me where. If not yet, that is easy to fix: I am in Almaty and always up for a meeting, a coffee or just a good conversation.",
     "button": "Message on Telegram",
-    "hint": "I reply fast, usually within an hour"
+    "hint": "I reply fast, usually within an hour",
+    "prefill": "Hi Andrei! I would like to meet. I'm ..."
   }
 }

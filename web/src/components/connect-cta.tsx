@@ -29,7 +29,7 @@ export async function ConnectCta() {
         </p>
         <div className="relative mt-6 flex flex-wrap items-center justify-center gap-3">
           <a
-            href={LINKS.telegram}
+            href={`${LINKS.telegram}?text=${encodeURIComponent(t("prefill"))}`}
             className="rounded-full px-6 py-3 text-sm font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98]"
             style={{
               backgroundImage:
